@@ -9,7 +9,8 @@ const SHIFT_TYPES = ["MORNING", "LUNCH", "PM"];
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 function DraggableChef({ chef, stats }) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    // CRITICAL: Using setActivatorNodeRef to restricting dragging ONLY to the handle
+    const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, isDragging } = useDraggable({
         id: `chef-${chef.id}`,
         data: chef
     });
@@ -44,34 +45,42 @@ function DraggableChef({ chef, stats }) {
         gap: '0.5rem',
         boxShadow: isOverLimit ? '0 0 15px rgba(244, 63, 94, 0.4)' : '0 2px 10px rgba(0,0,0,0.15)',
         border: isOverLimit ? '2px solid #f43f5e' : '1px solid transparent',
-        transition: 'all 0.2s ease',
+        transition: isDragging ? 'none' : 'all 0.2s ease',
         width: '100%',
         position: 'relative',
-        touchAction: 'manipulation' // Allow scrolling on the card itself
+        zIndex: isDragging ? 999 : 1,
+        touchAction: 'pan-y' // Explicitly allow vertical scrolling on the card
     };
 
     return (
         <div ref={setNodeRef} style={style} {...attributes}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
 
-                    {/* DRAG HANDLE */}
-                    <div {...listeners} style={{
-                        cursor: 'grab',
-                        padding: '4px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        touchAction: 'none',
-                        marginRight: '4px'
-                    }}>
-                        <span style={{ fontSize: '1.2rem', opacity: 0.7 }}>::</span>
+                    {/* EXPLICIT DRAG HANDLE */}
+                    <div
+                        ref={setActivatorNodeRef}
+                        {...listeners}
+                        style={{
+                            cursor: 'grab',
+                            minWidth: '32px',
+                            minHeight: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            touchAction: 'none', // Block scrolling ONLY on this handle
+                            background: 'rgba(0,0,0,0.2)',
+                            borderRadius: '8px',
+                            marginLeft: '-4px'
+                        }}
+                    >
+                        <span style={{ fontSize: '1.2rem', opacity: 0.8, lineHeight: 1 }}>:::</span>
                     </div>
 
                     <div style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '6px',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '8px',
                         background: chef.avatar ? `url(${chef.avatar}) center/cover` : 'rgba(255,255,255,0.2)',
                         display: 'flex',
                         alignItems: 'center',
@@ -80,7 +89,9 @@ function DraggableChef({ chef, stats }) {
                     }}>
                         {!chef.avatar && (chef.preferredShift === "MORNING" ? "☀️" : chef.preferredShift === "LUNCH" ? "🍽️" : "🌙")}
                     </div>
-                    <span style={{ letterSpacing: '0.02em', pointerEvents: 'none' }}>{chef.name}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ letterSpacing: '0.02em', pointerEvents: 'none', lineHeight: 1.2 }}>{chef.name}</span>
+                    </div>
                 </div>
                 <span style={{
                     fontSize: '0.7rem',
@@ -90,11 +101,11 @@ function DraggableChef({ chef, stats }) {
                     color: isOverLimit ? '#ffa0a0' : 'white',
                     fontWeight: 'bold'
                 }}>
-                    {stats?.hours || 0}h <span style={{ opacity: 0.6, fontWeight: '400' }}>/ {chef.maxWeeklyHours}h</span>
+                    {stats?.hours || 0}h
                 </span>
             </div>
 
-            <div style={{ display: 'flex', gap: '4px', marginTop: '2px', paddingLeft: '42px' }}>
+            <div style={{ display: 'flex', gap: '4px', marginTop: '6px', paddingLeft: '52px' }}>
                 {availDots}
             </div>
         </div>
@@ -200,7 +211,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
         }),
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 250,
+                delay: 100, // Reduced delay since we are using explicit handle
                 tolerance: 5,
             },
         })

@@ -417,13 +417,13 @@ td {
 
   /* Version Banner for Debugging */
   body::before {
-    content: 'v2.1 MOBILE FIX APPLIED';
+    content: 'v2.2 FINAL SCROLL FIX';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background: #10b981;
-    color: black;
+    background: crimson;
+    color: white;
     font-size: 10px;
     font-weight: bold;
     text-align: center;
