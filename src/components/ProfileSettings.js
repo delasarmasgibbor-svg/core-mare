@@ -8,6 +8,7 @@ export default function ProfileSettings({ user }) {
     const [email, setEmail] = useState(user.email || "");
     const [phone, setPhone] = useState(user.phone || "");
     const [avatar, setAvatar] = useState(user.avatar || "");
+    const [password, setPassword] = useState("");
     const [isUpdating, setIsUpdating] = useState(false);
     const [message, setMessage] = useState("");
 
@@ -16,9 +17,17 @@ export default function ProfileSettings({ user }) {
         setIsUpdating(true);
         setMessage("");
 
-        const res = await updateProfile(user.id, { name, email, phone, avatar });
+        const res = await updateProfile(user.id, {
+            name,
+            email,
+            phone,
+            avatar,
+            password: password
+        });
+
         if (res.success) {
-            setMessage("Profile updated successfully!");
+            setMessage("Account updated successfully!");
+            if (password) setPassword(""); // Clear password field
             setTimeout(() => setMessage(""), 3000);
         } else {
             setMessage("Failed to update profile.");
@@ -28,15 +37,15 @@ export default function ProfileSettings({ user }) {
 
     return (
         <div className="glass-card" style={{ height: '100%' }}>
-            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem' }}>👤 Identity Setup</h3>
+            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem' }}>👤 Account & Profile</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '2rem' }}>
-                Manage your professional details. These will be visible to the management team.
+                Secure your account with a personal login.
             </p>
 
             <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div>
                     <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Professional Name / Title
+                        Professional Name
                     </label>
                     <input
                         value={name}
@@ -49,7 +58,7 @@ export default function ProfileSettings({ user }) {
 
                 <div>
                     <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Email Address
+                        Email Address (Login)
                     </label>
                     <input
                         type="email"
@@ -58,6 +67,21 @@ export default function ProfileSettings({ user }) {
                         placeholder="chef@hotel.com"
                         required
                         disabled={isUpdating}
+                        style={{ border: email !== user.email ? '1px solid var(--accent)' : '1px solid var(--glass-border)' }}
+                    />
+                </div>
+
+                <div>
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
+                        New Password {user.email === 'manager@hotel.com' && <span style={{ color: '#f43f5e' }}>(Required to secure account)</span>}
+                    </label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={user.email === 'manager@hotel.com' ? "Create a secure password" : "Leave blank to keep current"}
+                        disabled={isUpdating}
+                        required={user.email === 'manager@hotel.com'}
                     />
                 </div>
 
@@ -127,8 +151,9 @@ export default function ProfileSettings({ user }) {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
                     <button type="submit" className="btn btn-primary" disabled={isUpdating} style={{ flex: 1 }}>
-                        {isUpdating ? "Saving Changes..." : "Update Identity"}
+                        {isUpdating ? "Saving Changes..." : "Secure & Update Account"}
                     </button>
+                    {isUpdating && <div className="spinner"></div>}
                 </div>
                 {message && (
                     <p style={{

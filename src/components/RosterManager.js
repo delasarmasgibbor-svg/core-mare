@@ -47,7 +47,7 @@ function DraggableChef({ chef, stats }) {
         border: isOverLimit ? '2px solid #f43f5e' : '1px solid transparent',
         transition: 'all 0.2s ease',
         width: '100%',
-        touchAction: 'none' // CRITICAL for mobile drag and drop
+        touchAction: 'none'
     };
 
     return (
@@ -351,15 +351,28 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     return (
         <div className="animate-fade" style={{ padding: '0.5rem' }}>
-            <header style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem' }}>
-                <div>
-                    <h1 style={{ marginBottom: '0.5rem' }}>Weekly Roster</h1>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Orchestrate your kitchen crew for the upcoming week.</p>
+            <header style={{ marginBottom: '3rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                    <div>
+                        <h1 style={{ marginBottom: '0.5rem' }}>Weekly Roster</h1>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Orchestrate your kitchen crew for the upcoming week.</p>
+                    </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                    <button className="btn btn-secondary" onClick={handleClear}>Clear</button>
-                    <div style={{ position: 'relative' }}>
-                        <button className="btn btn-secondary" onClick={() => setShowAutoSettings(!showAutoSettings)}>
+
+                {/* Controls Bar - Stacked on mobile, row on desktop */}
+                <div style={{
+                    display: 'flex',
+                    gap: '1rem',
+                    flexWrap: 'wrap',
+                    background: 'rgba(255,255,255,0.03)',
+                    padding: '1rem',
+                    borderRadius: '16px',
+                    border: '1px solid var(--glass-border)',
+                    justifyContent: 'flex-end'
+                }}>
+                    <button className="btn btn-secondary" onClick={handleClear} style={{ flex: '1 1 auto' }}>Clear</button>
+                    <div style={{ position: 'relative', flex: '1 1 auto' }}>
+                        <button className="btn btn-secondary" onClick={() => setShowAutoSettings(!showAutoSettings)} style={{ width: '100%' }}>
                             ✨ Auto Generate
                         </button>
                         {showAutoSettings && (
@@ -403,7 +416,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                             </div>
                         )}
                     </div>
-                    <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
+                    <button className="btn btn-primary" onClick={handleSave} disabled={isSaving} style={{ flex: '1 1 auto' }}>
                         {isSaving ? "Syncing..." : "Publish Roster"}
                     </button>
                 </div>
@@ -423,7 +436,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                         minHeight: '600px',
                         WebkitOverflowScrolling: 'touch',
                         position: 'relative',
-                        display: 'block' // Ensure it's not flex if we want scroll to work purely
+                        display: 'block',
+                        maxWidth: '100vw' // Ensure it doesn't overflow the viewport width un-scrollably
                     }}>
                         <div style={{ minWidth: '1000px' }}> {/* Increased min-width for better breathing room, scroll enabled */}
                             <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0', tableLayout: 'fixed' }}>

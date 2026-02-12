@@ -68,15 +68,21 @@ export async function updateStaffPreference(id, preferredShift) {
 
 export async function updateProfile(id, data) {
     try {
+        const updateData = {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            preferredRestDay: data.preferredRestDay,
+            avatar: data.avatar
+        };
+
+        if (data.password && data.password.trim() !== "") {
+            updateData.password = await bcrypt.hash(data.password, 10);
+        }
+
         await prisma.user.update({
             where: { id },
-            data: {
-                name: data.name,
-                email: data.email,
-                phone: data.phone,
-                preferredRestDay: data.preferredRestDay,
-                avatar: data.avatar
-            },
+            data: updateData,
         });
         revalidatePath("/");
         revalidatePath("/dashboard");
