@@ -38,7 +38,6 @@ function DraggableChef({ chef, stats }) {
         fontSize: '0.85rem',
         fontWeight: '600',
         color: 'white',
-        cursor: 'grab',
         marginBottom: '0.75rem',
         display: 'flex',
         flexDirection: 'column',
@@ -47,13 +46,28 @@ function DraggableChef({ chef, stats }) {
         border: isOverLimit ? '2px solid #f43f5e' : '1px solid transparent',
         transition: 'all 0.2s ease',
         width: '100%',
-        touchAction: 'none'
+        position: 'relative',
+        touchAction: 'manipulation' // Allow scrolling on the card itself
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <div ref={setNodeRef} style={style} {...attributes}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+
+                    {/* DRAG HANDLE */}
+                    <div {...listeners} style={{
+                        cursor: 'grab',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        touchAction: 'none',
+                        marginRight: '4px'
+                    }}>
+                        <span style={{ fontSize: '1.2rem', opacity: 0.7 }}>::</span>
+                    </div>
+
                     <div style={{
                         width: '24px',
                         height: '24px',
@@ -66,7 +80,7 @@ function DraggableChef({ chef, stats }) {
                     }}>
                         {!chef.avatar && (chef.preferredShift === "MORNING" ? "☀️" : chef.preferredShift === "LUNCH" ? "🍽️" : "🌙")}
                     </div>
-                    <span style={{ letterSpacing: '0.02em' }}>{chef.name}</span>
+                    <span style={{ letterSpacing: '0.02em', pointerEvents: 'none' }}>{chef.name}</span>
                 </div>
                 <span style={{
                     fontSize: '0.7rem',
@@ -80,7 +94,7 @@ function DraggableChef({ chef, stats }) {
                 </span>
             </div>
 
-            <div style={{ display: 'flex', gap: '4px', marginTop: '2px', paddingLeft: '24px' }}>
+            <div style={{ display: 'flex', gap: '4px', marginTop: '2px', paddingLeft: '42px' }}>
                 {availDots}
             </div>
         </div>
