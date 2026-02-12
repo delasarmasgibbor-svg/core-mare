@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String          @id @default(cuid())
+  name             String?
+  email            String          @unique
+  password         String
+  role             String          @default("STAFF") // "MANAGER" or "STAFF"
+  employmentType   String          @default("FULL_TIME") // "FULL_TIME" or "CASUAL"
+  maxWeeklyHours   Int?            @default(40)
+  phone            String?
+  avatar           String?
+  preferredShift   String?         @default("MORNING") // "MORNING", "LUNCH", "PM"
+  preferredRestDay String? // "Monday", "Tuesday", etc.
+  shifts           Shift[]
+  leaveRequests    LeaveRequest[]
+  availabilities   Availability[]
+  notifications    Notification[]
+  announcements    Announcement[]
+  ideas            Idea[]          @relation("ChefIdeas")
+  sentSwaps        ShiftSwap[]     @relation("Requester")
+  receivedSwaps    ShiftSwap[]     @relation("Target")
+  triviaScore      TriviaScore?
+  triviaHistory    TriviaHistory[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Shift {
+  id        String      @id @default(cuid())
+  date      DateTime
+  type      String // "MORNING", "LUNCH", "PM"
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes     String?
+  swapsFrom ShiftSwap[] @relation("RequesterShift")
+  swapsTo   ShiftSwap[] @relation("TargetShift")
+
+  @@index([userId])
+  @@index([date])
+}
+
+model LeaveRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  status    String   @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([startDate, endDate])
+}
+
+model ShiftSwap {
+  id               String   @id @default(cuid())
+  requesterId      String
+  requester        User     @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  targetId         String?
+  target           User?    @relation("Target", fields: [targetId], references: [id], onDelete: Cascade)
+  requesterShiftId String
+  requesterShift   Shift    @relation("RequesterShift", fields: [requesterShiftId], references: [id], onDelete: Cascade)
+  targetShiftId    String?
+  targetShift      Shift?   @relation("TargetShift", fields: [targetShiftId], references: [id], onDelete: Cascade)
+  status           String   @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
+  createdAt        DateTime @default(now())
+}
+
+model Availability {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dayOfWeek Int // 0-6 (Sunday-Saturday)
+  shiftType String // "MORNING", "LUNCH", "PM"
+  preferred Boolean @default(true)
+
+  @@index([userId])
+  @@index([dayOfWeek])
+}
+
+model Reservation {
+  id         String   @id @default(cuid())
+  date       DateTime
+  guestCount Int
+  notes      String?
+  type       String   @default("STANDARD") // "STANDARD" or "FUNCTION"
+  eventName  String? // Name of the function/event
+  session    String?  @default("DINNER") // "BREAKFAST", "LUNCH", "DINNER"
+
+  @@index([date])
+}
+
+model HotelOccupancy {
+  id            String   @id @default(cuid())
+  date          DateTime
+  currentGuests Int
+  capacity      Int
+
+  @@index([date])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Idea {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation("ChefIdeas", fields: [authorId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model TriviaScore {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points       Int      @default(0)
+  correctCount Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model TriviaHistory {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId Int
+  weekNumber Int
+  correct    Boolean
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, questionId, weekNumber])
+}
