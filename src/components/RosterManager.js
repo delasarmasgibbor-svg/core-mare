@@ -49,7 +49,7 @@ function DraggableChef({ chef, stats }) {
         width: '100%',
         position: 'relative',
         zIndex: isDragging ? 999 : 1,
-        touchAction: 'pan-y' // Explicitly allow vertical scrolling on the card
+        touchAction: 'manipulation' // Allow both vertical and horizontal scrolling on the card body
     };
 
     return (

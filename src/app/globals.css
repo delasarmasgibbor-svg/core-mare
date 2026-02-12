@@ -417,7 +417,7 @@ td {
 
   /* Version Banner for Debugging */
   body::before {
-    content: 'v2.2 FINAL SCROLL FIX';
+    content: 'v2.3 FINAL FIX';
     position: fixed;
     top: 0;
     left: 0;
