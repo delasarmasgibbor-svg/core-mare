@@ -376,25 +376,6 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     return (
         <div className="animate-fade" style={{ padding: '0.5rem' }}>
-            {/* FORCE DEBUG BANNER v2.4 */}
-            <div style={{
-                background: '#dc2626',
-                color: 'white',
-                padding: '1rem',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                borderRadius: '12px',
-                marginBottom: '1rem',
-                fontSize: '1.2rem',
-                border: '2px solid white',
-                boxShadow: '0 4px 20px rgba(220, 38, 38, 0.5)'
-            }}>
-                🚨 v2.4 FORCE UPDATE ACTIVE 🚨<br />
-                <span style={{ fontSize: '0.9rem', fontWeight: 'normal' }}>
-                    1. SWIPE TABLES TO SCROLL<br />
-                    2. HOLD <span style={{ background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: '4px' }}>:::</span> TO DRAG
-                </span>
-            </div>
 
             <header style={{ marginBottom: '3rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.5rem' }}>
