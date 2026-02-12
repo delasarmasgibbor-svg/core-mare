@@ -172,16 +172,16 @@ export default function HotelManagement({ initialOccupancy, initialReservations 
                 <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'linear-gradient(to bottom, var(--chef-2), var(--chef-1))' }}></div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Upcoming Bookings</h3>
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                         <button className="btn btn-secondary" onClick={() => setShowCalendar(true)} style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}>
-                            📅 View Calendar
+                            📅 Calendar
                         </button>
                         <button className="btn btn-secondary" onClick={() => setShowAddForm(!showAddForm)} style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}>
-                            {showAddForm ? "Cancel" : "Add Booking"}
+                            {showAddForm ? "Cancel" : "Add"}
                         </button>
                         {reservations.length > 0 && (
-                            <button className="btn btn-secondary" onClick={handleClearAll} style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', color: 'var(--chef-1)' }}>
-                                Clear All
+                            <button className="btn btn-secondary" onClick={handleClearAll} style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', color: '#f43f5e', borderColor: 'rgba(244, 63, 94, 0.3)' }}>
+                                🗑️ Clear All
                             </button>
                         )}
                     </div>
