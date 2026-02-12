@@ -22,35 +22,6 @@ async function main() {
     // NO EXTRA CHEFS CREATED HERE
     // You can add real staff via the Staff page in the app.
 
-    // 3. Create initial Hotel Occupancy data
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    for (let i = 0; i < 14; i++) {
-        const date = new Date(today)
-        date.setDate(today.getDate() + i)
-        // Check if occupancy exists first
-        const existing = await prisma.hotelOccupancy.findFirst({
-            where: { date }
-        });
-
-        if (!existing) {
-            await prisma.hotelOccupancy.create({
-                data: {
-                    date,
-                    currentGuests: Math.floor(Math.random() * 50) + 50,
-                    capacity: 120
-                }
-            })
-            await prisma.reservation.create({
-                data: {
-                    date,
-                    guestCount: Math.floor(Math.random() * 30) + 20,
-                    notes: "Regular reservations"
-                }
-            })
-        }
-    }
 
     console.log('Seed completed successfully (Manager Only).')
 }
