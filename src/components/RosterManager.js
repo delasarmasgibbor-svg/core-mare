@@ -25,7 +25,9 @@ import {
 const SHIFT_TYPES = ["MORNING", "LUNCH", "PM"];
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-function DraggableChef({ chef, stats }) {
+function DraggableChef({ chef, stats, onUpdateMaxHours }) {
+    const [editingHours, setEditingHours] = useState(false);
+    const [tempHours, setTempHours] = useState(chef.maxWeeklyHours || 40);
     const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, isDragging } = useDraggable({
         id: `chef-${chef.id}`,
         data: chef
@@ -46,6 +48,13 @@ function DraggableChef({ chef, stats }) {
             }} />
         );
     });
+
+    const handleSaveHours = () => {
+        setEditingHours(false);
+        if (onUpdateMaxHours && tempHours !== chef.maxWeeklyHours) {
+            onUpdateMaxHours(chef.id, tempHours);
+        }
+    };
 
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -113,21 +122,50 @@ function DraggableChef({ chef, stats }) {
                         </div>
                     </div>
                 </div>
-                <span style={{
-                    fontSize: '0.7rem',
-                    background: 'rgba(0,0,0,0.2)',
-                    padding: '2px 8px',
-                    borderRadius: '8px',
-                    color: isOverLimit ? 'var(--status-error)' : 'white',
-                    fontWeight: 'bold',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    {isCasual && <span style={{ fontSize: '0.55rem', background: 'rgba(251,191,36,0.3)', color: '#fbbf24', padding: '1px 4px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.03em' }}>C</span>}
-                    <Clock size={10} />
-                    {stats?.hours || 0}h{isCasual && `/${chef.maxWeeklyHours || '?'}h`}
-                </span>
+                {isCasual && editingHours ? (
+                    <input
+                        type="number"
+                        value={tempHours}
+                        onChange={(e) => setTempHours(parseInt(e.target.value) || 0)}
+                        onBlur={handleSaveHours}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSaveHours()}
+                        autoFocus
+                        min={0}
+                        max={168}
+                        style={{
+                            width: '50px',
+                            padding: '2px 4px',
+                            fontSize: '0.7rem',
+                            textAlign: 'center',
+                            background: 'rgba(0,0,0,0.4)',
+                            border: '1.5px solid var(--accent)',
+                            borderRadius: '6px',
+                            color: 'white',
+                            fontWeight: 'bold'
+                        }}
+                    />
+                ) : (
+                    <span
+                        onClick={(e) => { if (isCasual) { e.stopPropagation(); setEditingHours(true); setTempHours(chef.maxWeeklyHours || 40); } }}
+                        title={isCasual ? 'Click to edit max hours' : ''}
+                        style={{
+                            fontSize: '0.7rem',
+                            background: 'rgba(0,0,0,0.2)',
+                            padding: '2px 8px',
+                            borderRadius: '8px',
+                            color: isOverLimit ? 'var(--status-error)' : 'white',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            cursor: isCasual ? 'pointer' : 'default'
+                        }}
+                    >
+                        {isCasual && <span style={{ fontSize: '0.55rem', background: 'rgba(251,191,36,0.3)', color: '#fbbf24', padding: '1px 4px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.03em' }}>C</span>}
+                        <Clock size={10} />
+                        {stats?.hours || 0}h{isCasual && `/${chef.maxWeeklyHours || '?'}h`}
+                    </span>
+                )}
             </div>
 
             <div style={{ display: 'flex', gap: '4px', marginTop: '6px', paddingLeft: '52px' }}>
@@ -222,7 +260,7 @@ function RosterCell({ id, shifts, onRemove, conflicts }) {
 }
 
 export default function RosterManager({ initialChefs, initialRoster }) {
-    const [chefs] = useState(initialChefs);
+    const [chefs, setChefs] = useState(initialChefs);
     const [roster, setRoster] = useState(initialRoster || {});
     const [isSaving, setIsSaving] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
@@ -356,6 +394,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
         });
         setRoster(newRoster);
         setShowAutoSettings(false);
+        if (isMobile) setShowMobileStaff(true);
     };
 
     return (
@@ -612,6 +651,13 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                         <DraggableChef
                                             chef={chef}
                                             stats={stats.chefStats[chef.id]}
+                                            onUpdateMaxHours={async (chefId, newHours) => {
+                                                setChefs(prev => prev.map(c => c.id === chefId ? { ...c, maxWeeklyHours: newHours } : c));
+                                                try {
+                                                    const { updateProfile } = await import('@/app/actions/staff');
+                                                    await updateProfile(chefId, { maxWeeklyHours: newHours });
+                                                } catch (err) { console.error('Failed to save hours:', err); }
+                                            }}
                                         />
                                     </div>
                                 ))}
