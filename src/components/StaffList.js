@@ -2,6 +2,22 @@
 
 import { useState } from "react";
 import { createStaff, deleteStaff, updateStaffPreference } from "@/app/actions/staff";
+import {
+    User,
+    Mail,
+    Phone,
+    Camera,
+    Trash2,
+    Edit,
+    Plus,
+    X,
+    Save,
+    Briefcase,
+    Sun,
+    Moon,
+    Utensils,
+    RefreshCw
+} from "lucide-react";
 
 export default function StaffList({ initialStaff }) {
     const [staff, setStaff] = useState(initialStaff);
@@ -61,13 +77,6 @@ export default function StaffList({ initialStaff }) {
             avatar: editingStaff.avatar
         };
 
-        // We use updateProfile for generic updates. 
-        // Note: For a real app, we might want a specific adminUpdateProfile if permissions differ.
-        // Importing updateProfile dynamically or passing it as prop would be cleaner, 
-        // but here we'll assume it's available or use the server action directly.
-        // Since updateProfile is imported from layout/staff actions, let's make sure we import it.
-        // wait, I need to import updateProfile.
-
         const { updateProfile } = await import("@/app/actions/staff");
         const res = await updateProfile(editingStaff.id, data);
 
@@ -81,7 +90,7 @@ export default function StaffList({ initialStaff }) {
     };
 
     return (
-        <div className="animate-fade">
+        <div className="animate-fade-in">
             <header style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <div>
                     <h1 style={{ marginBottom: '0.5rem', fontSize: '2.5rem', background: 'linear-gradient(to right, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Staff Directory</h1>
@@ -90,44 +99,54 @@ export default function StaffList({ initialStaff }) {
                 <button
                     className="btn btn-primary"
                     onClick={() => setShowAddForm(!showAddForm)}
-                    style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', boxShadow: '0 4px 20px var(--accent-glow)' }}
+                    style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', boxShadow: '0 4px 20px var(--accent-glow)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
-                    {showAddForm ? "Cancel" : "＋ Add New Staff"}
+                    {showAddForm ? <><X size={18} /> Cancel</> : <><Plus size={18} /> Add New Staff</>}
                 </button>
             </header>
 
             {/* ADD FORM */}
             {showAddForm && (
-                <div className="glass-card animate-fade" style={{ marginBottom: '3rem', border: '1px solid rgba(79, 70, 229, 0.3)', position: 'relative', overflow: 'hidden', padding: '3rem', background: 'linear-gradient(to bottom right, rgba(20,20,30,0.8), rgba(10,10,15,0.95))' }}>
+                <div className="glass-card animate-fade-in" style={{ marginBottom: '3rem', border: '1px solid rgba(99, 102, 241, 0.3)', position: 'relative', overflow: 'hidden', padding: '3rem', background: 'linear-gradient(to bottom right, rgba(20,20,30,0.8), rgba(10,10,15,0.95))' }}>
                     <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--accent)', boxShadow: '0 0 15px var(--accent)' }}></div>
                     <h3 style={{ marginBottom: '2.5rem', fontSize: '1.5rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <span>🆔</span> Add New Staff Member
+                        <User size={24} color="var(--accent)" /> Add New Staff Member
                     </h3>
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name</label>
-                            <input name="name" required placeholder="e.g. Gordon Ramsay" style={{ fontSize: '1.1rem', padding: '1rem' }} />
+                            <div style={{ position: 'relative' }}>
+                                <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                <input name="name" required placeholder="e.g. Gordon Ramsay" style={{ fontSize: '1.1rem', padding: '1rem 1rem 1rem 3rem', width: '100%' }} />
+                            </div>
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email</label>
-                            <input name="email" type="email" required placeholder="chef@hotel.com" style={{ fontSize: '1.1rem', padding: '1rem' }} />
+                            <div style={{ position: 'relative' }}>
+                                <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                <input name="email" type="email" required placeholder="chef@hotel.com" style={{ fontSize: '1.1rem', padding: '1rem 1rem 1rem 3rem', width: '100%' }} />
+                            </div>
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Password</label>
-                            <input name="password" type="password" required placeholder="••••••••" style={{ fontSize: '1.1rem', padding: '1rem' }} />
+                            <input name="password" type="password" required placeholder="••••••••" style={{ fontSize: '1.1rem', padding: '1rem', width: '100%' }} />
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Default Shift</label>
-                            <select name="preferredShift" defaultValue="" style={{ fontSize: '1.1rem', padding: '1rem' }}>
-                                <option value="">🔄 Any / Flexible</option>
-                                <option value="MORNING">☀️ Morning</option>
-                                <option value="LUNCH">🍽️ Lunch</option>
-                                <option value="PM">🌙 Evening</option>
-                            </select>
+                            <div style={{ position: 'relative' }}>
+                                <Briefcase size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
+                                <select name="preferredShift" defaultValue="" style={{ fontSize: '1.1rem', padding: '1rem 1rem 1rem 3rem', width: '100%' }}>
+                                    <option value="">🔄 Any / Flexible</option>
+                                    <option value="MORNING">☀️ Morning</option>
+                                    <option value="LUNCH">🍽️ Lunch</option>
+                                    <option value="PM">🌙 Evening</option>
+                                </select>
+                            </div>
                         </div>
                         <div style={{ gridColumn: '1 / -1', marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
                             <button type="button" className="btn btn-secondary" onClick={() => setShowAddForm(false)}>Cancel</button>
-                            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ minWidth: '180px' }}>
+                            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ minWidth: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                {isSubmitting ? <RefreshCw size={18} className="animate-spin" /> : <Plus size={18} />}
                                 {isSubmitting ? "Adding..." : "Add Staff Member"}
                             </button>
                         </div>
@@ -141,22 +160,33 @@ export default function StaffList({ initialStaff }) {
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                     background: 'rgba(0,0,0,0.8)', zIndex: 100,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backdropFilter: 'blur(5px)'
+                    backdropFilter: 'blur(8px)'
                 }} onClick={() => setEditingStaff(null)}>
-                    <div className="glass-card animate-fade" style={{ width: 'min(100%, 600px)', padding: '2.5rem', border: '1px solid var(--accent)' }} onClick={e => e.stopPropagation()}>
-                        <h3 style={{ marginBottom: '2rem', fontSize: '1.4rem', fontWeight: '700' }}>✏️ Edit Staff Details</h3>
+                    <div className="glass-card animate-fade-in" style={{ width: 'min(100%, 600px)', padding: '2.5rem', border: '1px solid var(--accent-glow)' }} onClick={e => e.stopPropagation()}>
+                        <h3 style={{ marginBottom: '2rem', fontSize: '1.4rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Edit size={20} color="var(--accent-light)" /> Edit Staff Details
+                        </h3>
                         <form onSubmit={handleUpdateStaff} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div>
                                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Full Name</label>
-                                <input name="name" defaultValue={editingStaff.name} required />
+                                <div style={{ position: 'relative' }}>
+                                    <User size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                    <input name="name" defaultValue={editingStaff.name} required style={{ paddingLeft: '2.5rem' }} />
+                                </div>
                             </div>
                             <div>
                                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Email</label>
-                                <input name="email" type="email" defaultValue={editingStaff.email} required />
+                                <div style={{ position: 'relative' }}>
+                                    <Mail size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                    <input name="email" type="email" defaultValue={editingStaff.email} required style={{ paddingLeft: '2.5rem' }} />
+                                </div>
                             </div>
                             <div>
                                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Phone</label>
-                                <input name="phone" type="tel" defaultValue={editingStaff.phone} placeholder="+1..." />
+                                <div style={{ position: 'relative' }}>
+                                    <Phone size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                    <input name="phone" type="tel" defaultValue={editingStaff.phone} placeholder="+1..." style={{ paddingLeft: '2.5rem' }} />
+                                </div>
                             </div>
 
                             <div>
@@ -174,9 +204,10 @@ export default function StaffList({ initialStaff }) {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '1.5rem'
+                                        fontSize: '1.5rem',
+                                        color: 'white'
                                     }}>
-                                        {!editingStaff.avatar && "👨‍🍳"}
+                                        {!editingStaff.avatar && <User size={24} />}
                                     </div>
                                     <div style={{ flex: 1 }}>
                                         <input
@@ -195,8 +226,8 @@ export default function StaffList({ initialStaff }) {
                                                 }
                                             }}
                                         />
-                                        <label htmlFor="manager-avatar-upload" className="btn btn-secondary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', cursor: 'pointer' }}>
-                                            📸 Change Photo
+                                        <label htmlFor="manager-avatar-upload" className="btn btn-secondary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                            <Camera size={16} /> Change Photo
                                         </label>
                                     </div>
                                 </div>
@@ -243,7 +274,8 @@ export default function StaffList({ initialStaff }) {
 
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <button type="button" className="btn btn-secondary" onClick={() => setEditingStaff(null)} disabled={isSubmitting}>Cancel</button>
-                                <button type="submit" className="btn btn-primary" style={{ flex: 1 }} disabled={isSubmitting}>
+                                <button type="submit" className="btn btn-primary" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={isSubmitting}>
+                                    {isSubmitting ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}
                                     {isSubmitting ? "Saving..." : "Save Changes"}
                                 </button>
                             </div>
@@ -279,11 +311,13 @@ export default function StaffList({ initialStaff }) {
                                     boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
                                     border: '1px solid rgba(255,255,255,0.1)'
                                 }}>
-                                    {!chef.avatar && "👨‍🍳"}
+                                    {!chef.avatar && <User size={32} />}
                                 </div>
                                 <div style={{ flex: 1, overflow: 'hidden' }}>
                                     <h3 style={{ fontSize: '1.3rem', marginBottom: '0.25rem', color: 'white', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chef.name}</h3>
-                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chef.email}</p>
+                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                        <Mail size={12} /> {chef.email}
+                                    </p>
                                 </div>
                                 <button
                                     onClick={() => handleDelete(chef.id)}
@@ -307,7 +341,7 @@ export default function StaffList({ initialStaff }) {
                                     onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#fb7185'; } }}
                                     onMouseLeave={(e) => { if (!isSubmitting) { e.currentTarget.style.opacity = '0.5'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
                                 >
-                                    {isSubmitting ? "..." : "✕"}
+                                    {isSubmitting ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={18} />}
                                 </button>
                             </div>
                         </div>
@@ -348,12 +382,14 @@ export default function StaffList({ initialStaff }) {
                             <div style={{ marginTop: 'auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <button
                                     className="btn btn-secondary"
-                                    style={{ fontSize: '0.8rem', padding: '0.7rem' }}
+                                    style={{ fontSize: '0.8rem', padding: '0.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
                                     onClick={() => setEditingStaff(chef)}
                                 >
-                                    Edit Details
+                                    <Edit size={14} /> Edit Details
                                 </button>
-                                <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.7rem', opacity: 0.5, cursor: 'not-allowed' }}>Assign Shift</button>
+                                <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.7rem', opacity: 0.5, cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+                                    <Briefcase size={14} /> Assign Shift
+                                </button>
                             </div>
                         </div>
                     </div>

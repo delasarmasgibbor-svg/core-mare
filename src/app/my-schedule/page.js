@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import ShiftSwapManager from "@/components/ShiftSwapManager";
 import CulinaryTrivia from "@/components/CulinaryTrivia";
 import ChefInspiration from "@/components/ChefInspiration";
+import { Calendar, Hotel, Users, CalendarCheck } from "lucide-react";
 
 export default async function MySchedulePage() {
     const session = await getServerSession(authOptions);
@@ -75,10 +76,10 @@ export default async function MySchedulePage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '2rem' }}>
                 {/* Main Schedule Column */}
-                <div className="glass-card" style={{ gridColumn: 'span 8', padding: '2.5rem' }}>
+                <div className="glass-card" style={{ gridColumn: 'span 8', padding: '2.5rem', '@media (max-width: 1024px)': { gridColumn: 'span 12' } }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                         <h3 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <span>📅</span> Upcoming Shifts
+                            <Calendar size={24} color="var(--accent-light)" /> Upcoming Shifts
                         </h3>
                         <button className="btn btn-secondary" style={{ fontSize: '0.85rem', padding: '0.6rem 1rem' }}>Sync to Calendar</button>
                     </div>
@@ -142,7 +143,7 @@ export default async function MySchedulePage() {
                 {/* Sidebar Column */}
                 <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <div className="glass-card" style={{ padding: '2rem', background: 'linear-gradient(180deg, rgba(20,20,30,0.6) 0%, rgba(20,20,30,0.8) 100%)' }}>
-                        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--text-primary)' }}>🏨 Daily Briefing</h3>
+                        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Hotel size={20} color="var(--accent-light)" /> Daily Briefing</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                             <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', textAlign: 'center', border: '1px solid var(--glass-border)' }}>
                                 <p style={{ fontSize: '1.8rem', fontWeight: '700', color: 'white', lineHeight: 1 }}>{totalGuests}</p>

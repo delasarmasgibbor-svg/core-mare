@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createIdea, getIdeas } from "@/app/actions/ideas";
 import { getChefRank } from "@/lib/trivia-bank";
+import { Send, MessageSquare, Clock, User, Award } from "lucide-react";
 
 export default function ChefInspiration() {
     const [ideas, setIdeas] = useState([]);
@@ -46,7 +47,7 @@ export default function ChefInspiration() {
         <div className="glass-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
                 <h3 style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    🥗 Chef's Daily Wall
+                    <MessageSquare size={20} color="var(--accent-light)" /> Chef's Daily Wall
                 </h3>
                 <span style={{ fontSize: '0.65rem', color: 'var(--accent-light)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '800' }}>Live Feed</span>
             </div>
@@ -96,7 +97,7 @@ export default function ChefInspiration() {
                             opacity: isPosting || !newIdea.trim() ? 0.5 : 1
                         }}
                     >
-                        <span style={{ fontSize: '1.1rem' }}>➡️</span>
+                        <Send size={18} />
                     </button>
                 </div>
             </form>
@@ -126,10 +127,16 @@ export default function ChefInspiration() {
                                         width: '32px',
                                         height: '32px',
                                         borderRadius: '50%',
-                                        background: idea.author?.avatar ? `url(${idea.author.avatar}) center/cover` : 'var(--accent)',
+                                        background: idea.author?.avatar ? `url(${idea.author.avatar}) center/cover` : 'var(--glass)',
                                         border: '1px solid rgba(255,255,255,0.1)',
-                                        flexShrink: 0
-                                    }} />
+                                        flexShrink: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'white'
+                                    }}>
+                                        {!idea.author?.avatar && <User size={18} />}
+                                    </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                             <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -148,10 +155,11 @@ export default function ChefInspiration() {
                                                 gap: '3px',
                                                 flexShrink: 0
                                             }}>
-                                                {rank.icon} {rank.title}
+                                                <Award size={10} /> {rank.title}
                                             </span>
                                         </div>
-                                        <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+                                        <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <Clock size={10} />
                                             {new Date(idea.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(idea.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                                         </p>
                                     </div>

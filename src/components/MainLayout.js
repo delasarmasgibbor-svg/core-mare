@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { ChefHat, Menu, X } from "lucide-react";
 
 export default function MainLayout({ children }) {
     const { data: session, status } = useSession();
@@ -28,8 +29,11 @@ export default function MainLayout({ children }) {
     const isLoginPage = pathname === "/login";
 
     if (status === "loading") {
-        return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-secondary)', background: 'var(--bg-dark)' }}>
-            <div className="animate-fade">Accessing ChefOps...</div>
+        return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-secondary)', background: 'var(--bg-dark)', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 30px var(--accent-glow)', animation: 'pulse 2s infinite' }}>
+                <ChefHat size={28} color="white" />
+            </div>
+            <div className="animate-fade" style={{ fontWeight: '600', letterSpacing: '0.05em' }}>Accessing ChefOps...</div>
         </div>;
     }
 
@@ -76,14 +80,14 @@ export default function MainLayout({ children }) {
                 justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '32px', height: '32px', background: 'var(--accent)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', boxShadow: '0 4px 12px var(--accent-glow)' }}>⚜️</div>
+                    <div style={{ width: '32px', height: '32px', background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px var(--accent-glow)' }}><ChefHat size={18} color="white" /></div>
                     <span style={{ fontWeight: '700', fontSize: '1.2rem', fontFamily: 'Outfit', letterSpacing: '-0.02em' }}>Carrington</span>
                 </div>
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px', borderRadius: '8px', transition: 'var(--transition-fast)' }}
                 >
-                    {sidebarOpen ? "✕" : "☰"}
+                    {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                 </button>
             </div>
 

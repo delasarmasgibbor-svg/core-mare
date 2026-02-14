@@ -12,6 +12,22 @@ export async function recordTriviaScore(questionId, weekNumber, tries, isCorrect
     const userId = session.user.id;
 
     try {
+        // 0. Check if already answered correctly to prevent score spam/double counting
+        const existingHistory = await prisma.triviaHistory.findUnique({
+            where: {
+                userId_questionId_weekNumber: {
+                    userId,
+                    questionId,
+                    weekNumber
+                }
+            }
+        });
+
+        if (existingHistory && existingHistory.correct) {
+            // User already got this right, do not award points again
+            return { success: true, totalPoints: (await prisma.triviaScore.findUnique({ where: { userId } }))?.points || 0 };
+        }
+
         // 1. Record History
         await prisma.triviaHistory.upsert({
             where: {
@@ -32,9 +48,18 @@ export async function recordTriviaScore(questionId, weekNumber, tries, isCorrect
             }
         });
 
-        // 2. Update Total Score if correct
+        // 2. Update Total Score if correct AND it's the first time they get it right
         if (isCorrect) {
-            const points = tries === 1 ? 10 : 5;
+            // If they had a previous WRONG attempt, it's fine, we update to correct.
+            // Points: 10 for 1st try, 5 for 2nd try.
+            // NOTE: The client sends 'tries'. We trust it for now, but strictly we could check existingHistory to verify 'tries'.
+            // If existingHistory exists (and was false), this is effectively try #2 or more.
+
+            let points = 10;
+            if (tries > 1 || existingHistory) {
+                points = 5;
+            }
+
             await prisma.triviaScore.upsert({
                 where: { userId },
                 update: {

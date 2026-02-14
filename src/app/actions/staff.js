@@ -32,6 +32,7 @@ export async function createStaff(formData) {
             },
         });
         revalidatePath("/staff");
+        revalidatePath("/roster");
         return { success: true, user };
     } catch (error) {
         console.error("Error creating staff:", error);
@@ -45,6 +46,7 @@ export async function deleteStaff(id) {
             where: { id },
         });
         revalidatePath("/staff");
+        revalidatePath("/roster");
         return { success: true };
     } catch (error) {
         console.error("Error deleting staff:", error);
@@ -59,6 +61,7 @@ export async function updateStaffPreference(id, preferredShift) {
             data: { preferredShift },
         });
         revalidatePath("/staff");
+        revalidatePath("/roster");
         return { success: true };
     } catch (error) {
         console.error("Error updating preference:", error);

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ChefHat, Mail, Lock, LogIn, Loader2, Shield } from "lucide-react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -42,9 +43,20 @@ export default function LoginPage() {
             <div className="glass-card" style={{ maxWidth: '450px', width: '100%', padding: '3rem', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: 'linear-gradient(90deg, var(--accent), var(--accent-light))' }}></div>
 
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{
+                        width: '64px', height: '64px', borderRadius: '20px',
+                        background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        boxShadow: '0 8px 30px var(--accent-glow)',
+                        border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                        <ChefHat size={32} color="white" />
+                    </div>
+                </div>
                 <h1 style={{ marginBottom: '0.75rem', textAlign: 'center', fontSize: '2.25rem', color: 'white' }}>ChefOps.</h1>
-                <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '2.5rem', fontWeight: '500', letterSpacing: '0.05em' }}>
-                    PROFESSIONAL KITCHEN MANAGEMENT
+                <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '2.5rem', fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                    Professional Kitchen Management
                 </p>
 
                 {error && (
@@ -65,7 +77,7 @@ export default function LoginPage() {
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-muted)' }}>Corporate Identity</label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: '0.5rem' }}><Mail size={12} /> Corporate Identity</label>
                         <input
                             type="email"
                             placeholder="e.g. g.ramsay@hotel.com"
@@ -75,7 +87,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <div>
-                        <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-muted)' }}>Secure Access Key</label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: '0.5rem' }}><Lock size={12} /> Secure Access Key</label>
                         <input
                             type="password"
                             placeholder="••••••••"
@@ -87,9 +99,10 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         className="btn btn-primary"
-                        style={{ width: '100%', marginTop: '1rem', padding: '1rem' }}
+                        style={{ width: '100%', marginTop: '1rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                         disabled={loading}
                     >
+                        {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
                         {loading ? "Authenticating..." : "Initiate Session"}
                     </button>
                 </form>
@@ -100,7 +113,7 @@ export default function LoginPage() {
                     borderTop: '1px solid var(--glass-border)',
                     textAlign: 'center'
                 }}>
-                    <p style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>Development Credentials</p>
+                    <p style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}><Shield size={12} /> Development Credentials</p>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         <div style={{ textAlign: 'left' }}>
                             <p style={{ fontWeight: 'bold', color: 'var(--accent-light)' }}>Manager Node</p>

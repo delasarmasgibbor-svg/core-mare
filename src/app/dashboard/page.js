@@ -6,6 +6,7 @@ import { createAnnouncement } from "../actions/announcements";
 import ProfileSettings from "@/components/ProfileSettings";
 import ChefInspiration from "@/components/ChefInspiration";
 import CulinaryTrivia from "@/components/CulinaryTrivia";
+import { Users, ChefHat, Megaphone, Newspaper, Activity, Bell } from "lucide-react";
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
@@ -54,7 +55,7 @@ export default async function DashboardPage() {
     const greeting = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
 
     return (
-        <div className="animate-fade">
+        <div className="animate-fade-in">
             <header style={{
                 marginBottom: '4rem',
                 display: 'flex',
@@ -97,14 +98,16 @@ export default async function DashboardPage() {
                 </div>
             </header>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '3rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '2rem' }}>
 
                 {/* QUICK STATS */}
                 <div className="glass-card" style={{ position: 'relative', overflow: 'hidden', padding: '2.5rem' }}>
                     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: 'linear-gradient(90deg, var(--accent), var(--accent-light))' }}></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                         <h3 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Operational Metrics</h3>
-                        <div style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '800', letterSpacing: '0.05em' }}>LIVE FEED</div>
+                        <div style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '800', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Activity size={14} color="var(--accent-light)" /> LIVE FEED
+                        </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
@@ -113,7 +116,9 @@ export default async function DashboardPage() {
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500', marginBottom: '0.5rem' }}>Expected Guest Census</p>
                                 <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>{totalGuests}</p>
                             </div>
-                            <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', border: '1px solid var(--glass-border)' }}>🏠</div>
+                            <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }}>
+                                <Users size={32} />
+                            </div>
                         </div>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -121,7 +126,9 @@ export default async function DashboardPage() {
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500', marginBottom: '0.5rem' }}>Active Kitchen Crew</p>
                                 <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>{activeStaffCount}</p>
                             </div>
-                            <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', border: '1px solid var(--glass-border)' }}>👨‍🍳</div>
+                            <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }}>
+                                <ChefHat size={32} />
+                            </div>
                         </div>
 
                         <div style={{ marginTop: '0.5rem' }}>
@@ -152,13 +159,17 @@ export default async function DashboardPage() {
                 <div className="glass-card" style={{ padding: '2.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                         <h3 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Team Briefings</h3>
-                        <div style={{ fontSize: '1.5rem' }}>📢</div>
+                        <div style={{ color: 'var(--accent-light)' }}>
+                            <Megaphone size={28} />
+                        </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         {announcements.length === 0 ? (
                             <div style={{ padding: '4rem 1rem', textAlign: 'center' }}>
-                                <div style={{ fontSize: '3.5rem', marginBottom: '1.5rem', opacity: 0.05 }}>🗞️</div>
+                                <div style={{ marginBottom: '1.5rem', opacity: 0.1, display: 'flex', justifyContent: 'center' }}>
+                                    <Newspaper size={48} />
+                                </div>
                                 <p style={{ color: 'var(--text-muted)', fontStyle: 'italic', fontWeight: '500' }}>No active briefings for the kitchen node.</p>
                             </div>
                         ) : announcements.map(note => (
@@ -202,7 +213,9 @@ export default async function DashboardPage() {
                             await createAnnouncement(formData);
                         }} style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
                             <input type="hidden" name="authorId" value={user.id} />
-                            <p style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>Create Notice</p>
+                            <p style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Bell size={14} /> Create Notice
+                            </p>
                             <input name="title" placeholder="Notice Title" required style={{ marginBottom: '0.75rem' }} />
                             <textarea name="body" placeholder="Broadcast a message to the kitchen team..." required style={{ minHeight: '100px', marginBottom: '1.25rem' }} />
                             <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Post Announcement</button>

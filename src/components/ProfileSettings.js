@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updateProfile } from "@/app/actions/staff";
+import { User, Mail, Phone, Lock, Camera, Upload, Save, Loader2, ShieldCheck } from "lucide-react";
 
 export default function ProfileSettings({ user }) {
     const [name, setName] = useState(user.name || "");
@@ -36,16 +37,23 @@ export default function ProfileSettings({ user }) {
     };
 
     return (
-        <div className="glass-card" style={{ height: '100%' }}>
-            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.4rem' }}>👤 Account & Profile</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '2rem' }}>
-                Secure your account with a personal login.
-            </p>
+        <div className="glass-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <div style={{ padding: '8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '10px', border: '1px solid var(--accent)' }}>
+                        <ShieldCheck size={20} color="var(--accent-light)" />
+                    </div>
+                    <h3 style={{ fontSize: '1.4rem' }}>Account & Profile</h3>
+                </div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+                    Manage your personal information and security settings.
+                </p>
+            </div>
 
-            <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
                 <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Professional Name
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <User size={14} /> Professional Name
                     </label>
                     <input
                         value={name}
@@ -57,8 +65,8 @@ export default function ProfileSettings({ user }) {
                 </div>
 
                 <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Email Address (Login)
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Mail size={14} /> Email Address
                     </label>
                     <input
                         type="email"
@@ -72,8 +80,8 @@ export default function ProfileSettings({ user }) {
                 </div>
 
                 <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        New Password {user.email === 'manager@hotel.com' && <span style={{ color: '#f43f5e' }}>(Required to secure account)</span>}
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Lock size={14} /> Change Password {user.email === 'manager@hotel.com' && <span style={{ color: '#f43f5e', fontSize: '0.65rem', marginLeft: 'auto' }}>REQUIRED</span>}
                     </label>
                     <input
                         type="password"
@@ -86,8 +94,8 @@ export default function ProfileSettings({ user }) {
                 </div>
 
                 <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Phone Number
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Phone size={14} /> Phone Number
                     </label>
                     <input
                         type="tel"
@@ -99,24 +107,25 @@ export default function ProfileSettings({ user }) {
                 </div>
 
                 <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '0.75rem' }}>
-                        Profile Picture
+                    <label style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Camera size={14} /> Profile Picture
                     </label>
-                    <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', background: 'rgba(0,0,0,0.1)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', background: 'rgba(0,0,0,0.2)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
                         <div style={{
-                            width: '80px',
-                            height: '80px',
-                            borderRadius: '20px',
-                            background: avatar ? `url(${avatar}) center/cover` : 'var(--glass)',
-                            border: '2px solid var(--accent)',
+                            width: '72px',
+                            height: '72px',
+                            borderRadius: '18px',
+                            background: avatar ? `url(${avatar}) center/cover` : 'var(--bg-surface-elevated)',
+                            border: '2px solid var(--glass-border)',
                             flexShrink: 0,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '2rem',
-                            boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+                            boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
+                            color: 'var(--text-muted)'
                         }}>
-                            {!avatar && "👨‍🍳"}
+                            {!avatar && <User size={32} />}
                         </div>
                         <div style={{ flex: 1 }}>
                             <input
@@ -139,8 +148,8 @@ export default function ProfileSettings({ user }) {
                                     }
                                 }}
                             />
-                            <label htmlFor="avatar-upload" className="btn btn-secondary" style={{ width: '100%', marginBottom: '0.5rem', cursor: 'pointer' }}>
-                                📸 Choose Photo
+                            <label htmlFor="avatar-upload" className="btn btn-secondary" style={{ width: '100%', marginBottom: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}>
+                                <Upload size={14} /> Upload New Photo
                             </label>
                             <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textAlign: 'center' }}>
                                 JPG or PNG. Max 2MB.
@@ -149,24 +158,29 @@ export default function ProfileSettings({ user }) {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
-                    <button type="submit" className="btn btn-primary" disabled={isUpdating} style={{ flex: 1 }}>
-                        {isUpdating ? "Saving Changes..." : "Secure & Update Account"}
+                <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
+                    <button type="submit" className="btn btn-primary" disabled={isUpdating} style={{ width: '100%', gap: '0.5rem' }}>
+                        {isUpdating ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {isUpdating ? "Saving..." : "Save Changes"}
                     </button>
-                    {isUpdating && <div className="spinner"></div>}
+                    {message && (
+                        <p style={{
+                            fontSize: '0.85rem',
+                            color: message.includes('success') ? 'var(--status-success)' : 'var(--status-error)',
+                            fontWeight: '600',
+                            textAlign: 'center',
+                            marginTop: '1rem',
+                            animation: 'fadeIn 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            {message.includes('success') ? <CheckCircle size={14} /> : <AlertTriangle size={14} />}
+                            {message}
+                        </p>
+                    )}
                 </div>
-                {message && (
-                    <p style={{
-                        fontSize: '0.85rem',
-                        color: message.includes('success') ? '#10b981' : '#f43f5e',
-                        fontWeight: '600',
-                        textAlign: 'center',
-                        marginTop: '0.5rem',
-                        animation: 'fadeIn 0.3s ease'
-                    }}>
-                        {message}
-                    </p>
-                )}
             </form>
         </div>
     );
