@@ -23,7 +23,7 @@ import {
 const SHIFT_TYPES = ["MORNING", "LUNCH", "PM"];
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-function DraggableChef({ chef, stats, onUpdateMaxHours }) {
+function DraggableChef({ chef, stats, onUpdateMaxHours, isSelected, onSelect }) {
     const [editingHours, setEditingHours] = useState(false);
     const [tempHours, setTempHours] = useState(chef.maxWeeklyHours || 40);
     const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, isDragging } = useDraggable({
@@ -66,16 +66,19 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
         display: 'flex',
         flexDirection: 'column',
         gap: '0.5rem',
-        boxShadow: isOverLimit ? '0 0 15px rgba(239, 68, 68, 0.5)' : 'var(--shadow-sm)',
-        border: isOverLimit ? '2px solid var(--status-error)' : '1px solid rgba(255,255,255,0.1)',
+        boxShadow: isSelected ? '0 0 0 2px var(--accent), 0 0 15px var(--accent-glow)' : (isOverLimit ? '0 0 15px rgba(239, 68, 68, 0.5)' : 'var(--shadow-sm)'),
+        border: isSelected ? '2px solid var(--accent)' : (isOverLimit ? '2px solid var(--status-error)' : '1px solid rgba(255,255,255,0.1)'),
+        transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         opacity: isDragging ? 0.3 : 1, // Dim when dragging
         width: '100%',
         position: 'relative',
-        zIndex: isDragging ? 999 : 1
+        zIndex: isDragging ? 999 : 1,
+        cursor: 'pointer'
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes}>
+        <div ref={setNodeRef} style={style} {...attributes} onClick={() => onSelect && onSelect(chef.id)}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div
@@ -172,7 +175,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
     );
 }
 
-function RosterCell({ id, shifts, onRemove, conflicts }) {
+function RosterCell({ id, shifts, onRemove, conflicts, onCellClick, isSelectionMode }) {
     const { isOver, setNodeRef } = useDroppable({ id });
 
     const style = {
@@ -187,11 +190,12 @@ function RosterCell({ id, shifts, onRemove, conflicts }) {
         flexDirection: 'column',
         gap: '6px',
         position: 'relative',
-        boxShadow: isOver ? '0 8px 24px rgba(99, 102, 241, 0.15)' : 'none'
+        boxShadow: isOver ? '0 8px 24px rgba(99, 102, 241, 0.15)' : 'none',
+        cursor: isSelectionMode ? 'copy' : 'default'
     };
 
     return (
-        <div ref={setNodeRef} style={style}>
+        <div ref={setNodeRef} style={style} onClick={() => isSelectionMode && onCellClick && onCellClick(id)}>
             {shifts.length === 0 && !isOver && (
                 <div style={{
                     position: 'absolute',
@@ -212,7 +216,7 @@ function RosterCell({ id, shifts, onRemove, conflicts }) {
             {shifts.map((s, i) => {
                 const chefConflict = conflicts[`${id}-${s.id}`];
                 return (
-                    <div key={`${id}-${s.id}-${i}`} onClick={() => onRemove(id, s.id)} style={{ cursor: 'pointer', position: 'relative' }}>
+                    <div key={`${id}-${s.id}-${i}`} onClick={(e) => { e.stopPropagation(); onRemove(id, s.id); }} style={{ cursor: 'pointer', position: 'relative' }}>
                         <div style={{
                             background: s.color || 'var(--accent)',
                             padding: '6px 10px',
@@ -262,6 +266,25 @@ export default function RosterManager({ initialChefs, initialRoster }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isMobile, setIsMobile] = useState(true); // Mobile First Default
     const [activeChef, setActiveChef] = useState(null); // For DragOverlay
+    const [selectedChefId, setSelectedChefId] = useState(null); // For Tap-to-Assign
+
+    const handleChefSelect = (chefId) => {
+        setSelectedChefId(prev => prev === chefId ? null : chefId);
+    };
+
+    const handleCellClick = (cellId) => {
+        if (selectedChefId) {
+            const chef = chefs.find(c => c.id === selectedChefId);
+            if (chef) {
+                setRoster(prev => {
+                    const currentInCell = prev[cellId] || [];
+                    if (currentInCell.find(c => c.id === chef.id)) return prev;
+                    return { ...prev, [cellId]: [...currentInCell, chef] };
+                });
+                setSelectedChefId(null); // Deselect after assignment
+            }
+        }
+    };
 
     // Detect Mobile for Responsive Layout
     useEffect(() => {
@@ -574,6 +597,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                                         shifts={roster[cellId] || []}
                                                         onRemove={removeChefFromCell}
                                                         conflicts={stats.conflicts}
+                                                        onCellClick={handleCellClick}
+                                                        isSelectionMode={!!selectedChefId}
                                                     />
                                                 </div>
                                             </div>
@@ -611,6 +636,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                                             shifts={roster[`${day}-${type}`] || []}
                                                             onRemove={removeChefFromCell}
                                                             conflicts={stats.conflicts}
+                                                            onCellClick={handleCellClick}
+                                                            isSelectionMode={!!selectedChefId}
                                                         />
                                                     </td>
                                                 ))}
@@ -657,6 +684,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                         <DraggableChef
                                             chef={chef}
                                             stats={stats.chefStats[chef.id]}
+                                            isSelected={selectedChefId === chef.id}
+                                            onSelect={handleChefSelect}
                                             onUpdateMaxHours={async (chefId, newHours) => {
                                                 setChefs(prev => prev.map(c => c.id === chefId ? { ...c, maxWeeklyHours: newHours } : c));
                                                 try {
