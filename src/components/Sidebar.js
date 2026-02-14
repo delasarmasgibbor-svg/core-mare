@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen }) {
     ];
 
     return (
-        <aside className={`glass-card main-sidebar ${isOpen ? 'open' : ''}`} style={{ borderRight: '1px solid var(--glass-border)', boxShadow: '20px 0 40px rgba(0,0,0,0.3)' }}>
+        <aside className={`glass-card main-sidebar ${isOpen ? 'open' : ''}`} style={{ background: 'var(--bg-surface-elevated)', borderRight: '1px solid var(--glass-border)', boxShadow: '20px 0 40px rgba(0,0,0,0.3)' }}>
             <div style={{
                 marginBottom: '3rem',
                 display: 'flex',
