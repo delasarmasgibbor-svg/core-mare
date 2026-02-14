@@ -521,7 +521,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                         onClick={() => setMobileDay(Math.max(0, mobileDay - 1))}
                                         disabled={mobileDay === 0}
                                         style={{
-                                            background: 'transparent', border: 'none', color: mobileDay === 0 ? 'var(--text-muted)' : 'white',
+                                            background: 'transparent', border: 'none', color: mobileDay === 0 ? 'var(--text-muted)' : 'var(--text-primary)',
                                             cursor: mobileDay === 0 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
                                             display: 'flex', alignItems: 'center'
                                         }}
@@ -533,7 +533,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                         onClick={() => setMobileDay(Math.min(6, mobileDay + 1))}
                                         disabled={mobileDay === 6}
                                         style={{
-                                            background: 'transparent', border: 'none', color: mobileDay === 6 ? 'var(--text-muted)' : 'white',
+                                            background: 'transparent', border: 'none', color: mobileDay === 6 ? 'var(--text-muted)' : 'var(--text-primary)',
                                             cursor: mobileDay === 6 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
                                             display: 'flex', alignItems: 'center'
                                         }}

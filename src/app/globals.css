@@ -25,14 +25,12 @@
   /* Elevated White */
 
   /* Glassmorphism - Light & Airy */
-  --glass: rgba(255, 255, 255, 0.7);
-  /* Frosted White */
-  --glass-border: rgba(212, 175, 55, 0.15);
-  /* Subtle Gold Border */
-  --glass-highlight: rgba(255, 255, 255, 0.8);
-  /* Bright White Highlight */
-  --glass-shine: rgba(255, 255, 255, 0.4);
-  /* Stronger Shine for Light Mode */
+  --glass: rgba(255, 255, 255, 0.95);
+  /* High opacity for readability */
+  --glass-border: rgba(180, 140, 40, 0.6);
+  /* High contrast gold border */
+  --glass-highlight: rgba(255, 255, 255, 0.5);
+  --glass-shine: rgba(255, 255, 255, 0.2);
 
   /* Text - Elegant Dark */
   --text-primary: #1e293b;

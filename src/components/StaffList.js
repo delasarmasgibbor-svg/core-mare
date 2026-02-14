@@ -496,32 +496,34 @@ export default function StaffList({ initialStaff }) {
                                 marginTop: '0.5rem',
                                 marginBottom: '2rem',
                                 padding: '1rem',
-                                background: 'rgba(0,0,0,0.2)',
+                                background: 'rgba(0,0,0,0.02)',
                                 borderRadius: 'var(--radius-sm)',
                                 border: '1px solid var(--glass-border)'
                             }}>
-                                <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem', display: 'block', color: 'var(--text-secondary)' }}>Preferred Shift</label>
-                                <select
-                                    value={chef.preferredShift || "MORNING"}
-                                    onChange={(e) => handlePreferenceChange(chef.id, e.target.value)}
-                                    disabled={isSubmitting}
-                                    style={{
-                                        padding: '0.25rem 0',
-                                        fontSize: '0.9rem',
-                                        background: 'transparent',
-                                        border: 'none',
-                                        borderRadius: 0,
-                                        color: isSubmitting ? 'var(--text-muted)' : 'white',
-                                        width: '100%',
-                                        cursor: isSubmitting ? 'wait' : 'pointer',
-                                        fontWeight: '600'
-                                    }}
-                                >
-                                    <option value="">🔄 Any / Flexible</option>
-                                    <option value="MORNING">☀️ Morning</option>
-                                    <option value="LUNCH">🍽️ Lunch</option>
-                                    <option value="PM">🌙 Evening</option>
-                                </select>
+                                <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem', display: 'block', color: 'var(--text-secondary)' }}>Preferred Shifts</label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {(!chef.preferredShift || chef.preferredShift === "") && (
+                                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                            🔄 Any / Flexible
+                                        </span>
+                                    )}
+                                    {(chef.preferredShift || "").split(',').filter(Boolean).map(s => {
+                                        const labels = { MORNING: '☀️ Morning', LUNCH: '🍽️ Lunch', PM: '🌙 Evening' };
+                                        return (
+                                            <span key={s} style={{
+                                                fontSize: '0.75rem',
+                                                padding: '4px 8px',
+                                                borderRadius: '6px',
+                                                background: 'rgba(212, 175, 55, 0.1)',
+                                                border: '1px solid rgba(212, 175, 55, 0.2)',
+                                                color: 'var(--text-primary)',
+                                                fontWeight: '600'
+                                            }}>
+                                                {labels[s] || s}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             <div style={{ marginTop: 'auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
