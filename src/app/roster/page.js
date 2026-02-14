@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import RosterManager from "@/components/RosterManager";
 
+import { startOfWeek, endOfWeek } from 'date-fns';
+
 export const dynamic = 'force-dynamic';
 
 export default async function RosterPage() {
@@ -17,10 +19,18 @@ export default async function RosterPage() {
         color: `var(--chef-${(index % 6) + 1})`
     }));
 
-    // 2. Fetch shifts for the "current" week
-    // For this version, we'll just fetch all shifts and group them
-    // In a mature version, you'd filter by date range
+    // 2. Fetch shifts for the "current" week ONLY
+    const now = new Date();
+    const start = startOfWeek(now, { weekStartsOn: 1 }); // Monday start
+    const end = endOfWeek(now, { weekStartsOn: 1 });
+
     const shifts = await prisma.shift.findMany({
+        where: {
+            date: {
+                gte: start,
+                lte: end
+            }
+        },
         include: { user: true }
     });
 
