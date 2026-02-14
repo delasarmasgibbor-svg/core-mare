@@ -295,12 +295,13 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                 }
                 chefStats[chef.id].days.add(day);
 
-                const dayIdx = DAYS.indexOf(day);
-                const isAvailable = chef.availabilities?.some(a => a.dayOfWeek === dayIdx && a.shiftType === type);
-                // Strict check only if availabilities are defined
-                if (chef.availabilities?.length > 0 && !isAvailable) {
-                    // Temporarily removed strict availability conflict for better UX unless explicitly set
-                    // conflicts[`${cellId}-${chef.id}`] = (conflicts[`${cellId}-${chef.id}`] || []).concat("Unavailable");
+                // Flag if staff is assigned to a non-preferred shift
+                if (chef.preferredShift && chef.preferredShift !== "") {
+                    const preferredShifts = chef.preferredShift.split(',').map(s => s.trim()).filter(Boolean);
+                    if (preferredShifts.length > 0 && !preferredShifts.includes(type)) {
+                        conflicts[`${cellId}-${chef.id}`] = (conflicts[`${cellId}-${chef.id}`] || []);
+                        conflicts[`${cellId}-${chef.id}`].push("Wrong Shift");
+                    }
                 }
             });
         });
@@ -356,41 +357,64 @@ export default function RosterManager({ initialChefs, initialRoster }) {
     const autoGenerate = () => {
         const newRoster = {};
         const staffByDay = {};
-        chefs.forEach(chef => { staffByDay[chef.id] = new Set(); });
+        const weeklyHours = {};
+        chefs.forEach(chef => {
+            staffByDay[chef.id] = new Set();
+            weeklyHours[chef.id] = 0;
+        });
+
+        const getPreferredShifts = (chef) => {
+            if (!chef.preferredShift || chef.preferredShift === "") return null; // null = any/flexible
+            return chef.preferredShift.split(',').map(s => s.trim()).filter(Boolean);
+        };
 
         const isChefAvailable = (chef, day, shiftType) => {
+            // Rest day check
             if (chef.preferredRestDay && chef.preferredRestDay.split(',').map(d => d.trim()).includes(day)) return false;
-            // For casuals: respect preferred shift and prevent double shifts
+
+            // Preferred shift check — applies to ALL staff
+            const preferredShifts = getPreferredShifts(chef);
+            if (preferredShifts && !preferredShifts.includes(shiftType)) return false;
+
+            // Casual-specific: no double shifts on same day
             if (chef.employmentType === 'CASUAL') {
-                if (chef.preferredShift && chef.preferredShift !== "" && chef.preferredShift !== shiftType) return false;
                 if (staffByDay[chef.id].has(day)) return false;
+                // Check weekly hour limits for casuals
+                if (chef.maxWeeklyHours && weeklyHours[chef.id] + 8 > chef.maxWeeklyHours) return false;
             }
-            // Full-time: can work any shift type and multiple shifts per day
+
             return true;
         };
 
-        let chefIdx = 0;
+        // Shuffle helper for fairer distribution
+        const shuffled = (arr) => {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        };
+
         DAYS.forEach(day => {
             SHIFT_TYPES.forEach(type => {
                 const shiftId = `${day}-${type}`;
                 const assigned = [];
                 const limit = shiftLimits[type] || 0;
-                let attempts = 0;
-                let currentChefIdx = chefIdx + Math.floor(Math.random() * chefs.length);
 
-                while (assigned.length < limit && attempts < chefs.length) {
-                    const candidate = chefs[currentChefIdx % chefs.length];
-                    currentChefIdx++;
-                    attempts++;
+                // Shuffle candidates for fairer rotation
+                const candidates = shuffled(chefs);
 
+                for (const candidate of candidates) {
+                    if (assigned.length >= limit) break;
                     if (isChefAvailable(candidate, day, type)) {
                         assigned.push(candidate);
                         staffByDay[candidate.id].add(day);
+                        weeklyHours[candidate.id] += 8;
                     }
                 }
                 newRoster[shiftId] = assigned;
             });
-            chefIdx++;
         });
         setRoster(newRoster);
         setShowAutoSettings(false);

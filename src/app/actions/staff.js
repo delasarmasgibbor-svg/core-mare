@@ -76,6 +76,7 @@ export async function updateProfile(id, data) {
             email: data.email,
             phone: data.phone,
             preferredRestDay: data.preferredRestDay,
+            preferredShift: data.preferredShift !== undefined ? data.preferredShift : undefined,
             avatar: data.avatar
         };
 

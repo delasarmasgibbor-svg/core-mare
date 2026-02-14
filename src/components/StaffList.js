@@ -75,6 +75,7 @@ export default function StaffList({ initialStaff }) {
             email: formData.get("email"),
             phone: formData.get("phone"),
             preferredRestDay: formData.get("preferredRestDay"),
+            preferredShift: editingStaff.preferredShift || "",
             avatar: editingStaff.avatar,
             employmentType: editingStaff.employmentType,
             maxWeeklyHours: editingStaff.maxWeeklyHours
@@ -135,16 +136,46 @@ export default function StaffList({ initialStaff }) {
                             <input name="password" type="password" required placeholder="••••••••" style={{ fontSize: '1.1rem', padding: '1rem', width: '100%' }} />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Default Shift</label>
-                            <div style={{ position: 'relative' }}>
-                                <Briefcase size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
-                                <select name="preferredShift" defaultValue="" style={{ fontSize: '1.1rem', padding: '1rem 1rem 1rem 3rem', width: '100%' }}>
-                                    <option value="">🔄 Any / Flexible</option>
-                                    <option value="MORNING">☀️ Morning</option>
-                                    <option value="LUNCH">🍽️ Lunch</option>
-                                    <option value="PM">🌙 Evening</option>
-                                </select>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Preferred Shifts</label>
+                            <input type="hidden" name="preferredShift" id="add-preferred-shift" defaultValue="" />
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                {[{ value: '', label: '🔄 Any' }, { value: 'MORNING', label: '☀️ Morning' }, { value: 'LUNCH', label: '🍽️ Lunch' }, { value: 'PM', label: '🌙 Evening' }].map(opt => (
+                                    <button
+                                        key={opt.value}
+                                        type="button"
+                                        onClick={(e) => {
+                                            const hiddenInput = document.getElementById('add-preferred-shift');
+                                            if (opt.value === '') {
+                                                hiddenInput.value = '';
+                                                e.target.closest('div').querySelectorAll('button').forEach(b => b.style.background = 'rgba(255,255,255,0.05)');
+                                                e.target.style.background = 'rgba(99,102,241,0.15)';
+                                            } else {
+                                                const current = hiddenInput.value ? hiddenInput.value.split(',').filter(Boolean) : [];
+                                                if (current.includes(opt.value)) {
+                                                    hiddenInput.value = current.filter(v => v !== opt.value).join(',');
+                                                    e.target.style.background = 'rgba(255,255,255,0.05)';
+                                                } else {
+                                                    hiddenInput.value = [...current, opt.value].join(',');
+                                                    e.target.style.background = 'rgba(99,102,241,0.15)';
+                                                }
+                                            }
+                                        }}
+                                        style={{
+                                            padding: '0.6rem 1rem',
+                                            fontSize: '0.95rem',
+                                            borderRadius: '20px',
+                                            border: '1px solid var(--glass-border)',
+                                            background: opt.value === '' ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)',
+                                            color: 'white',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
                             </div>
+                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Select one or more. Staff will only be auto-assigned to their preferred shifts.</p>
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Employment Type</label>
@@ -287,6 +318,45 @@ export default function StaffList({ initialStaff }) {
                                         );
                                     })}
                                 </div>
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Preferred Shifts (Multi-select)</label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {[{ value: 'MORNING', label: '☀️ Morning' }, { value: 'LUNCH', label: '🍽️ Lunch' }, { value: 'PM', label: '🌙 Evening' }].map(opt => {
+                                        const currentShifts = (editingStaff.preferredShift || "").split(",").filter(Boolean);
+                                        const isSelected = currentShifts.includes(opt.value);
+
+                                        return (
+                                            <button
+                                                key={opt.value}
+                                                type="button"
+                                                onClick={() => {
+                                                    let newShifts;
+                                                    if (isSelected) {
+                                                        newShifts = currentShifts.filter(s => s !== opt.value);
+                                                    } else {
+                                                        newShifts = [...currentShifts, opt.value];
+                                                    }
+                                                    setEditingStaff({ ...editingStaff, preferredShift: newShifts.join(",") });
+                                                }}
+                                                style={{
+                                                    padding: '0.5rem 0.8rem',
+                                                    fontSize: '0.85rem',
+                                                    borderRadius: '20px',
+                                                    border: isSelected ? '1px solid var(--accent)' : '1px solid var(--glass-border)',
+                                                    background: isSelected ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
+                                                    color: isSelected ? 'white' : 'var(--text-secondary)',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                {opt.label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>Leave empty for "Any". Staff are only auto-assigned to selected shifts.</p>
                             </div>
 
                             <div>
