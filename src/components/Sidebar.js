@@ -108,7 +108,8 @@ export default function Sidebar({ isOpen }) {
                 })}
             </nav>
 
-            <div style={{ marginTop: 'auto', paddingTop: '2.5rem', borderTop: '1px solid var(--glass-border)' }}>
+            <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textAlign: 'center', opacity: 0.5 }}>v3.5 (Hash: b65b783)</div>
                 <div style={{
                     marginBottom: '1.5rem',
                     padding: '0.75rem 1rem',
