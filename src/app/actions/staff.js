@@ -79,6 +79,14 @@ export async function updateProfile(id, data) {
             avatar: data.avatar
         };
 
+        // Update employment type if provided
+        if (data.employmentType) {
+            updateData.employmentType = data.employmentType;
+        }
+        if (data.maxWeeklyHours !== undefined && data.maxWeeklyHours !== null) {
+            updateData.maxWeeklyHours = parseInt(data.maxWeeklyHours) || 40;
+        }
+
         if (data.password && data.password.trim() !== "") {
             updateData.password = await bcrypt.hash(data.password, 10);
         }

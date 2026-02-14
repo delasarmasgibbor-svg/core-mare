@@ -16,7 +16,8 @@ import {
     Sun,
     Moon,
     Utensils,
-    RefreshCw
+    RefreshCw,
+    Clock
 } from "lucide-react";
 
 export default function StaffList({ initialStaff }) {
@@ -74,7 +75,9 @@ export default function StaffList({ initialStaff }) {
             email: formData.get("email"),
             phone: formData.get("phone"),
             preferredRestDay: formData.get("preferredRestDay"),
-            avatar: editingStaff.avatar
+            avatar: editingStaff.avatar,
+            employmentType: editingStaff.employmentType,
+            maxWeeklyHours: editingStaff.maxWeeklyHours
         };
 
         const { updateProfile } = await import("@/app/actions/staff");
@@ -142,6 +145,20 @@ export default function StaffList({ initialStaff }) {
                                     <option value="PM">🌙 Evening</option>
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Employment Type</label>
+                            <div style={{ position: 'relative' }}>
+                                <Briefcase size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
+                                <select name="type" defaultValue="FULL_TIME" style={{ fontSize: '1.1rem', padding: '1rem 1rem 1rem 3rem', width: '100%' }}>
+                                    <option value="FULL_TIME">Full Time</option>
+                                    <option value="CASUAL">Casual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Max Weekly Hours (Casual)</label>
+                            <input name="maxWeeklyHours" type="number" defaultValue={40} min={0} max={168} placeholder="e.g. 20" style={{ fontSize: '1.1rem', padding: '1rem', width: '100%' }} />
                         </div>
                         <div style={{ gridColumn: '1 / -1', marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
                             <button type="button" className="btn btn-secondary" onClick={() => setShowAddForm(false)}>Cancel</button>
@@ -272,6 +289,50 @@ export default function StaffList({ initialStaff }) {
                                 </div>
                             </div>
 
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Employment Type</label>
+                                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                    {['FULL_TIME', 'CASUAL'].map(type => (
+                                        <button
+                                            key={type}
+                                            type="button"
+                                            onClick={() => setEditingStaff({ ...editingStaff, employmentType: type })}
+                                            style={{
+                                                flex: 1,
+                                                padding: '0.75rem',
+                                                fontSize: '0.9rem',
+                                                borderRadius: '12px',
+                                                border: editingStaff.employmentType === type ? '1.5px solid var(--accent)' : '1px solid var(--glass-border)',
+                                                background: editingStaff.employmentType === type ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)',
+                                                color: editingStaff.employmentType === type ? 'var(--accent-light)' : 'var(--text-secondary)',
+                                                cursor: 'pointer',
+                                                fontWeight: '700',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            {type === 'FULL_TIME' ? '🏢 Full Time' : '⏰ Casual'}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {editingStaff.employmentType === 'CASUAL' && (
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)' }}>Max Weekly Hours</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <Clock size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                        <input
+                                            type="number"
+                                            value={editingStaff.maxWeeklyHours || 20}
+                                            onChange={(e) => setEditingStaff({ ...editingStaff, maxWeeklyHours: parseInt(e.target.value) || 0 })}
+                                            min={0}
+                                            max={168}
+                                            style={{ paddingLeft: '2.5rem' }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <button type="button" className="btn btn-secondary" onClick={() => setEditingStaff(null)} disabled={isSubmitting}>Cancel</button>
                                 <button type="submit" className="btn btn-primary" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={isSubmitting}>
@@ -318,6 +379,20 @@ export default function StaffList({ initialStaff }) {
                                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                         <Mail size={12} /> {chef.email}
                                     </p>
+                                    <span style={{
+                                        fontSize: '0.6rem',
+                                        fontWeight: '800',
+                                        padding: '2px 8px',
+                                        borderRadius: '6px',
+                                        display: 'inline-block',
+                                        marginTop: '4px',
+                                        letterSpacing: '0.05em',
+                                        background: chef.employmentType === 'CASUAL' ? 'rgba(251,191,36,0.15)' : 'rgba(34,197,94,0.15)',
+                                        color: chef.employmentType === 'CASUAL' ? '#fbbf24' : '#22c55e',
+                                        border: chef.employmentType === 'CASUAL' ? '1px solid rgba(251,191,36,0.3)' : '1px solid rgba(34,197,94,0.3)'
+                                    }}>
+                                        {chef.employmentType === 'CASUAL' ? `CASUAL · ${chef.maxWeeklyHours || 0}h/wk` : 'FULL TIME'}
+                                    </span>
                                 </div>
                                 <button
                                     onClick={() => handleDelete(chef.id)}

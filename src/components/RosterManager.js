@@ -250,7 +250,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
             assignedChefs.forEach(chef => {
                 if (!chefStats[chef.id]) return;
                 chefStats[chef.id].hours += 8;
-                if (chefStats[chef.id].days.has(day)) {
+                // Only flag double-shift as a conflict for CASUAL employees
+                if (chef.employmentType === 'CASUAL' && chefStats[chef.id].days.has(day)) {
                     conflicts[`${cellId}-${chef.id}`] = (conflicts[`${cellId}-${chef.id}`] || []);
                     conflicts[`${cellId}-${chef.id}`].push("Double Shift");
                 }
@@ -321,8 +322,12 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
         const isChefAvailable = (chef, day, shiftType) => {
             if (chef.preferredRestDay && chef.preferredRestDay.split(',').map(d => d.trim()).includes(day)) return false;
-            if (chef.preferredShift && chef.preferredShift !== "" && chef.preferredShift !== shiftType) return false;
-            if (staffByDay[chef.id].has(day)) return false;
+            // For casuals: respect preferred shift and prevent double shifts
+            if (chef.employmentType === 'CASUAL') {
+                if (chef.preferredShift && chef.preferredShift !== "" && chef.preferredShift !== shiftType) return false;
+                if (staffByDay[chef.id].has(day)) return false;
+            }
+            // Full-time: can work any shift type and multiple shifts per day
             return true;
         };
 
