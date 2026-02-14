@@ -47,7 +47,7 @@ export default function MainLayout({ children }) {
             minHeight: '100vh',
             background: 'var(--bg-dark)',
             position: 'relative',
-            overflow: 'hidden'
+            overflowX: 'hidden' // Allow vertical scroll, prevent horizontal
         }}>
             {/* Interactive Cursor Glow */}
             <div style={{
