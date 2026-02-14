@@ -260,12 +260,12 @@ export default function RosterManager({ initialChefs, initialRoster }) {
     const [chefs, setChefs] = useState(initialChefs);
     const [roster, setRoster] = useState(initialRoster || {});
     const [isSaving, setIsSaving] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(true); // Mobile First Default
     const [activeChef, setActiveChef] = useState(null); // For DragOverlay
 
     // Detect Mobile for Responsive Layout
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        const checkMobile = () => setIsMobile(window.innerWidth < 1200);
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
