@@ -17,7 +17,9 @@ import {
     User,
     Clock,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    ChevronLeft,
+    ChevronRight
 } from "lucide-react";
 
 const SHIFT_TYPES = ["MORNING", "LUNCH", "PM"];
@@ -304,18 +306,18 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     const [showAutoSettings, setShowAutoSettings] = useState(false);
     const [shiftLimits, setShiftLimits] = useState({ MORNING: 1, LUNCH: 1, PM: 2 });
+    const [mobileDay, setMobileDay] = useState(0); // Track which day to show on mobile
+    const [showMobileStaff, setShowMobileStaff] = useState(false);
 
     const autoGenerate = () => {
         const newRoster = {};
-        const staffByDay = {}; // Track who is working on which day to prevent double shifts if needed
+        const staffByDay = {};
         chefs.forEach(chef => { staffByDay[chef.id] = new Set(); });
 
         const isChefAvailable = (chef, day, shiftType) => {
             if (chef.preferredRestDay && chef.preferredRestDay.split(',').map(d => d.trim()).includes(day)) return false;
-            // Relaxed preferred shift logic: if they prefer MORNING, they can still work LUNCH if needed, unless strict?
-            // For now, let's keep it advisory or strict. Let's make it strict for auto-gen to be "smart".
             if (chef.preferredShift && chef.preferredShift !== "" && chef.preferredShift !== shiftType) return false;
-            if (staffByDay[chef.id].has(day)) return false; // No double shifts
+            if (staffByDay[chef.id].has(day)) return false;
             return true;
         };
 
@@ -326,7 +328,6 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                 const assigned = [];
                 const limit = shiftLimits[type] || 0;
                 let attempts = 0;
-                // Randomized start index for better distribution
                 let currentChefIdx = chefIdx + Math.floor(Math.random() * chefs.length);
 
                 while (assigned.length < limit && attempts < chefs.length) {
@@ -341,7 +342,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                 }
                 newRoster[shiftId] = assigned;
             });
-            chefIdx++; // Rotate starting chef each day
+            chefIdx++;
         });
         setRoster(newRoster);
         setShowAutoSettings(false);
@@ -349,28 +350,28 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     return (
         <div className="animate-fade-in" style={{ padding: '0.5rem' }}>
-            <header style={{ marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+            <header style={{ marginBottom: isMobile ? '1rem' : '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
                     <div>
-                        <h1 style={{ marginBottom: '0.5rem', fontSize: '2rem' }}>Weekly Roster</h1>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Orchestrate your kitchen crew.</p>
+                        <h1 style={{ marginBottom: '0.25rem', fontSize: isMobile ? '1.4rem' : '2rem' }}>Weekly Roster</h1>
+                        {!isMobile && <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Orchestrate your kitchen crew.</p>}
                     </div>
                 </div>
 
                 <div style={{
                     display: 'flex',
-                    gap: '0.75rem',
+                    gap: '0.5rem',
                     flexWrap: 'wrap',
                     background: 'rgba(255,255,255,0.03)',
-                    padding: '0.75rem',
-                    borderRadius: '16px',
+                    padding: isMobile ? '0.5rem' : '0.75rem',
+                    borderRadius: '12px',
                     border: '1px solid var(--glass-border)'
                 }}>
-                    <button className="btn btn-secondary" onClick={handleClear} style={{ flex: '1 1 auto', fontSize: '0.8rem' }}>
+                    <button className="btn btn-secondary" onClick={handleClear} style={{ flex: '1 1 auto', fontSize: '0.75rem', padding: '0.5rem 0.75rem' }}>
                         <Trash2 size={14} /> Clear
                     </button>
                     <div style={{ position: 'relative', flex: '1 1 auto' }}>
-                        <button className="btn btn-secondary" onClick={() => setShowAutoSettings(!showAutoSettings)} style={{ width: '100%', fontSize: '0.8rem' }}>
+                        <button className="btn btn-secondary" onClick={() => setShowAutoSettings(!showAutoSettings)} style={{ width: '100%', fontSize: '0.75rem', padding: '0.5rem 0.75rem' }}>
                             <Wand2 size={14} /> Auto
                         </button>
                         {showAutoSettings && (
@@ -378,16 +379,17 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                 position: 'absolute',
                                 top: '110%',
                                 right: 0,
-                                width: '280px',
+                                left: isMobile ? 0 : 'auto',
+                                width: isMobile ? 'auto' : '280px',
                                 zIndex: 100,
-                                padding: '1.25rem',
+                                padding: '1rem',
                                 border: '1px solid var(--accent-glow)',
                                 background: 'var(--bg-surface-elevated)'
                             }}>
-                                <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>Auto-Gen Settings</h4>
-                                <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <h4 style={{ marginBottom: '0.75rem', fontSize: '0.85rem' }}>Auto-Gen Settings</h4>
+                                <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                     {Object.entries(shiftLimits).map(([type, limit]) => (
-                                        <div key={type} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '8px' }}>
+                                        <div key={type} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '0.4rem 0.5rem', borderRadius: '8px' }}>
                                             <label style={{ fontSize: '0.75rem', fontWeight: '600' }}>{type === 'PM' ? 'Dinner' : type.charAt(0) + type.slice(1).toLowerCase()}</label>
                                             <input
                                                 type="number"
@@ -400,13 +402,13 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                         </div>
                                     ))}
                                 </div>
-                                <button className="btn btn-primary" style={{ width: '100%', fontSize: '0.85rem' }} onClick={autoGenerate}>
+                                <button className="btn btn-primary" style={{ width: '100%', fontSize: '0.8rem', padding: '0.5rem' }} onClick={autoGenerate}>
                                     Generate
                                 </button>
                             </div>
                         )}
                     </div>
-                    <button className="btn btn-primary" onClick={handleSave} disabled={isSaving} style={{ flex: '1 1 auto', fontSize: '0.8rem' }}>
+                    <button className="btn btn-primary" onClick={handleSave} disabled={isSaving} style={{ flex: '1 1 auto', fontSize: '0.75rem', padding: '0.5rem 0.75rem' }}>
                         <Save size={14} /> {isSaving ? "Syncing..." : "Publish"}
                     </button>
                 </div>
@@ -414,7 +416,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
             <div className="roster-flex-container" style={{
                 display: 'flex',
-                gap: '2rem',
+                gap: isMobile ? '1rem' : '2rem',
                 flexDirection: isMobile ? 'column-reverse' : 'row',
                 alignItems: 'flex-start'
             }}>
@@ -423,39 +425,106 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                     <div className="glass-card" style={{
                         flex: 1,
                         width: '100%',
-                        padding: isMobile ? '1rem' : '1.5rem',
-                        minHeight: '600px',
+                        padding: isMobile ? '0.75rem' : '1.5rem',
+                        minHeight: isMobile ? 'auto' : '600px',
                         position: 'relative',
                         background: 'rgba(255,255,255,0.01)'
                     }}>
                         {isMobile ? (
-                            // MOBILE VIEW: Stacked Days
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                {DAYS.map(day => (
-                                    <div key={day} style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
-                                        <div style={{ padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <span style={{ fontWeight: '700', color: 'white' }}>{day}</span>
-                                        </div>
-                                        <div style={{ padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                            {SHIFT_TYPES.map(type => (
-                                                <div key={`${day}-${type}`} style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '1rem', alignItems: 'start' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)', paddingTop: '8px' }}>
-                                                        {type === "MORNING" && <Sun size={14} color="var(--morning)" />}
-                                                        {type === "LUNCH" && <Utensils size={14} color="var(--lunch)" />}
-                                                        {type === "PM" && <Moon size={14} color="var(--pm)" />}
-                                                        {type}
-                                                    </div>
+                            // MOBILE VIEW: One day at a time with day navigation
+                            <div>
+                                {/* Day Selector */}
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    marginBottom: '1rem',
+                                    background: 'rgba(255,255,255,0.03)',
+                                    borderRadius: '12px',
+                                    padding: '0.5rem',
+                                    border: '1px solid var(--glass-border)'
+                                }}>
+                                    <button
+                                        onClick={() => setMobileDay(Math.max(0, mobileDay - 1))}
+                                        disabled={mobileDay === 0}
+                                        style={{
+                                            background: 'transparent', border: 'none', color: mobileDay === 0 ? 'var(--text-muted)' : 'white',
+                                            cursor: mobileDay === 0 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
+                                            display: 'flex', alignItems: 'center'
+                                        }}
+                                    >
+                                        <ChevronLeft size={20} />
+                                    </button>
+                                    <span style={{ fontWeight: '700', fontSize: '1rem', color: 'white' }}>{DAYS[mobileDay]}</span>
+                                    <button
+                                        onClick={() => setMobileDay(Math.min(6, mobileDay + 1))}
+                                        disabled={mobileDay === 6}
+                                        style={{
+                                            background: 'transparent', border: 'none', color: mobileDay === 6 ? 'var(--text-muted)' : 'white',
+                                            cursor: mobileDay === 6 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
+                                            display: 'flex', alignItems: 'center'
+                                        }}
+                                    >
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </div>
+
+                                {/* Day dots indicator */}
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '1rem' }}>
+                                    {DAYS.map((d, i) => (
+                                        <button
+                                            key={d}
+                                            onClick={() => setMobileDay(i)}
+                                            style={{
+                                                width: i === mobileDay ? '24px' : '8px',
+                                                height: '8px',
+                                                borderRadius: '4px',
+                                                background: i === mobileDay ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s',
+                                                padding: 0
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Shifts for selected day */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    {SHIFT_TYPES.map(type => {
+                                        const day = DAYS[mobileDay];
+                                        const cellId = `${day}-${type}`;
+                                        return (
+                                            <div key={cellId} style={{
+                                                background: 'rgba(255,255,255,0.02)',
+                                                borderRadius: '12px',
+                                                border: '1px solid var(--glass-border)',
+                                                overflow: 'hidden'
+                                            }}>
+                                                <div style={{
+                                                    padding: '0.6rem 0.75rem',
+                                                    background: 'rgba(255,255,255,0.03)',
+                                                    borderBottom: '1px solid var(--glass-border)',
+                                                    display: 'flex', alignItems: 'center', gap: '8px',
+                                                    fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)'
+                                                }}>
+                                                    {type === "MORNING" && <Sun size={14} color="var(--morning)" />}
+                                                    {type === "LUNCH" && <Utensils size={14} color="var(--lunch)" />}
+                                                    {type === "PM" && <Moon size={14} color="var(--pm)" />}
+                                                    {type === "MORNING" ? "Morning" : type === "LUNCH" ? "Lunch" : "Dinner"}
+                                                </div>
+                                                <div style={{ padding: '0.5rem' }}>
                                                     <RosterCell
-                                                        id={`${day}-${type}`}
-                                                        shifts={roster[`${day}-${type}`] || []}
+                                                        id={cellId}
+                                                        shifts={roster[cellId] || []}
                                                         onRemove={removeChefFromCell}
                                                         conflicts={stats.conflicts}
                                                     />
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         ) : (
                             // DESKTOP VIEW: Table
@@ -505,19 +574,39 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                         position: isMobile ? 'relative' : 'sticky',
                         top: isMobile ? 0 : '2rem',
                         alignSelf: 'flex-start',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        padding: isMobile ? '0.75rem' : undefined
                     }}>
-                        <h3 style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>Staff Directory ({chefs.length})</h3>
-                        <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: '0.75rem', overflowX: isMobile ? 'auto' : 'hidden', paddingBottom: isMobile ? '1rem' : 0 }}>
-                            {chefs.map(chef => (
-                                <div key={chef.id} style={{ minWidth: isMobile ? '200px' : 'auto' }}>
-                                    <DraggableChef
-                                        chef={chef}
-                                        stats={stats.chefStats[chef.id]}
-                                    />
-                                </div>
-                            ))}
+                        <div
+                            onClick={() => isMobile && setShowMobileStaff(!showMobileStaff)}
+                            style={{
+                                marginBottom: (!isMobile || showMobileStaff) ? '1rem' : 0,
+                                fontSize: '1rem',
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                cursor: isMobile ? 'pointer' : 'default'
+                            }}
+                        >
+                            <h3 style={{ fontSize: isMobile ? '0.9rem' : '1.2rem', margin: 0 }}>Staff Directory ({chefs.length})</h3>
+                            {isMobile && (showMobileStaff ? <ChevronUp size={18} /> : <ChevronDown size={18} />)}
                         </div>
+                        {(!isMobile || showMobileStaff) && (
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.5rem',
+                                maxHeight: isMobile ? '250px' : 'none',
+                                overflowY: isMobile ? 'auto' : 'visible'
+                            }}>
+                                {chefs.map(chef => (
+                                    <div key={chef.id}>
+                                        <DraggableChef
+                                            chef={chef}
+                                            stats={stats.chefStats[chef.id]}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </aside>
                 </DndContext>
             </div>
