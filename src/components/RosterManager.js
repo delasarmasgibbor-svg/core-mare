@@ -71,8 +71,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
         opacity: isDragging ? 0.3 : 1, // Dim when dragging
         width: '100%',
         position: 'relative',
-        zIndex: isDragging ? 999 : 1,
-        touchAction: 'none'
+        zIndex: isDragging ? 999 : 1
     };
 
     return (
@@ -266,7 +265,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     // Detect Mobile for Responsive Layout
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
