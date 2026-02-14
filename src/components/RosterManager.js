@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { DndContext, useDraggable, useDroppable, useSensors, useSensor, PointerSensor, TouchSensor } from "@dnd-kit/core";
+import { DndContext, useDraggable, useDroppable, useSensors, useSensor, PointerSensor, TouchSensor, DragOverlay } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { saveRoster, clearRoster as clearRosterAction } from "@/app/actions/roster";
 import {
@@ -17,9 +17,7 @@ import {
     User,
     Clock,
     ChevronDown,
-    ChevronUp,
-    ChevronLeft,
-    ChevronRight
+    ChevronUp
 } from "lucide-react";
 
 const SHIFT_TYPES = ["MORNING", "LUNCH", "PM"];
@@ -57,7 +55,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
     };
 
     const style = {
-        transform: CSS.Translate.toString(transform),
+        // transform: CSS.Translate.toString(transform), // Disable transform for sidebar item when using overlay
         background: chef.color || 'var(--accent)',
         padding: '0.75rem 1rem',
         borderRadius: '16px',
@@ -70,7 +68,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
         gap: '0.5rem',
         boxShadow: isOverLimit ? '0 0 15px rgba(239, 68, 68, 0.5)' : 'var(--shadow-sm)',
         border: isOverLimit ? '2px solid var(--status-error)' : '1px solid rgba(255,255,255,0.1)',
-        transition: isDragging ? 'none' : 'all 0.2s ease',
+        opacity: isDragging ? 0.3 : 1, // Dim when dragging
         width: '100%',
         position: 'relative',
         zIndex: isDragging ? 999 : 1,
@@ -202,12 +200,12 @@ function RosterCell({ id, shifts, onRemove, conflicts }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '0.65rem',
-                    color: 'var(--text-muted)',
+                    fontSize: '0.75rem',
+                    color: 'var(--accent-dark)',
                     fontWeight: '700',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
-                    opacity: 0.4
+                    opacity: 0.8
                 }}>
                     Drop
                 </div>
@@ -264,6 +262,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
     const [roster, setRoster] = useState(initialRoster || {});
     const [isSaving, setIsSaving] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [activeChef, setActiveChef] = useState(null); // For DragOverlay
 
     // Detect Mobile for Responsive Layout
     useEffect(() => {
@@ -275,7 +274,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-        useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
+        useSensor(TouchSensor, { activationConstraint: { delay: 0, tolerance: 5 } })
     );
 
     const stats = useMemo(() => {
@@ -314,7 +313,12 @@ export default function RosterManager({ initialChefs, initialRoster }) {
         return { chefStats, conflicts };
     }, [roster, chefs]);
 
+    const handleDragStart = (event) => {
+        setActiveChef(event.active.data.current);
+    };
+
     const handleDragEnd = (event) => {
+        setActiveChef(null);
         const { active, over } = event;
         if (over) {
             const chef = active.data.current;
@@ -493,7 +497,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                 flexDirection: isMobile ? 'column-reverse' : 'row',
                 alignItems: 'flex-start'
             }}>
-                <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                     {/* ROSTER GRID / LIST */}
                     <div className="glass-card" style={{
                         flex: 1,
@@ -507,60 +511,41 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                             // MOBILE VIEW: One day at a time with day navigation
                             <div>
                                 {/* Day Selector */}
+                                {/* Day Selector - Horizontal Tabs */}
                                 <div style={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
+                                    gap: '8px',
+                                    overflowX: 'auto',
+                                    paddingBottom: '0.5rem',
                                     marginBottom: '1rem',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    borderRadius: '12px',
-                                    padding: '0.5rem',
-                                    border: '1px solid var(--glass-border)'
+                                    scrollbarWidth: 'none',
+                                    msOverflowStyle: 'none'
                                 }}>
-                                    <button
-                                        onClick={() => setMobileDay(Math.max(0, mobileDay - 1))}
-                                        disabled={mobileDay === 0}
-                                        style={{
-                                            background: 'transparent', border: 'none', color: mobileDay === 0 ? 'var(--text-muted)' : 'var(--text-primary)',
-                                            cursor: mobileDay === 0 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
-                                            display: 'flex', alignItems: 'center'
-                                        }}
-                                    >
-                                        <ChevronLeft size={20} />
-                                    </button>
-                                    <span style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>{DAYS[mobileDay]}</span>
-                                    <button
-                                        onClick={() => setMobileDay(Math.min(6, mobileDay + 1))}
-                                        disabled={mobileDay === 6}
-                                        style={{
-                                            background: 'transparent', border: 'none', color: mobileDay === 6 ? 'var(--text-muted)' : 'var(--text-primary)',
-                                            cursor: mobileDay === 6 ? 'default' : 'pointer', padding: '8px', borderRadius: '8px',
-                                            display: 'flex', alignItems: 'center'
-                                        }}
-                                    >
-                                        <ChevronRight size={20} />
-                                    </button>
-                                </div>
-
-                                {/* Day dots indicator */}
-                                <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '1rem' }}>
                                     {DAYS.map((d, i) => (
                                         <button
                                             key={d}
                                             onClick={() => setMobileDay(i)}
                                             style={{
-                                                width: i === mobileDay ? '24px' : '8px',
-                                                height: '8px',
-                                                borderRadius: '4px',
-                                                background: i === mobileDay ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
-                                                border: 'none',
+                                                flex: '0 0 auto',
+                                                padding: '0.75rem 1.5rem',
+                                                borderRadius: '999px',
+                                                border: i === mobileDay ? 'none' : '1px solid var(--glass-border)',
+                                                background: i === mobileDay ? 'var(--accent)' : 'var(--bg-surface-elevated)',
+                                                color: i === mobileDay ? 'white' : 'var(--text-primary)',
+                                                fontWeight: '700',
+                                                fontSize: '0.95rem',
                                                 cursor: 'pointer',
+                                                boxShadow: i === mobileDay ? '0 4px 12px rgba(212, 175, 55, 0.4)' : 'none',
                                                 transition: 'all 0.2s',
-                                                padding: 0
+                                                whiteSpace: 'nowrap'
                                             }}
-                                        />
+                                        >
+                                            {d}
+                                        </button>
                                     ))}
                                 </div>
+
+
 
                                 {/* Shifts for selected day */}
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -576,10 +561,10 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                             }}>
                                                 <div style={{
                                                     padding: '0.6rem 0.75rem',
-                                                    background: 'rgba(255,255,255,0.03)',
-                                                    borderBottom: '1px solid var(--glass-border)',
+                                                    background: 'rgba(212, 175, 55, 0.15)',
+                                                    borderBottom: '1px solid var(--accent)',
                                                     display: 'flex', alignItems: 'center', gap: '8px',
-                                                    fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)'
+                                                    fontSize: '0.9rem', fontWeight: '800', color: 'var(--text-primary)'
                                                 }}>
                                                     {type === "MORNING" && <Sun size={14} color="var(--morning)" />}
                                                     {type === "LUNCH" && <Utensils size={14} color="var(--lunch)" />}
@@ -688,6 +673,35 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                             </div>
                         )}
                     </aside>
+                    <DragOverlay>
+                        {activeChef ? (
+                            <div style={{
+                                background: activeChef.color || 'var(--accent)',
+                                padding: '0.75rem 1rem',
+                                borderRadius: '16px',
+                                fontSize: '0.85rem',
+                                fontWeight: '600',
+                                color: 'var(--text-primary)',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                width: '240px',
+                                cursor: 'grabbing'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div style={{
+                                            width: '32px', height: '32px', borderRadius: '8px',
+                                            background: activeChef.avatar ? `url(${activeChef.avatar}) center/cover` : 'rgba(0,0,0,0.2)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                        }}>
+                                            {!activeChef.avatar && <User size={16} color="rgba(255,255,255,0.7)" />}
+                                        </div>
+                                        <span style={{ fontSize: '1rem' }}>{activeChef.name}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null}
+                    </DragOverlay>
                 </DndContext>
             </div>
         </div>

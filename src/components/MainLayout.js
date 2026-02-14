@@ -71,7 +71,7 @@ export default function MainLayout({ children }) {
                 left: 0,
                 right: 0,
                 height: '60px',
-                background: 'rgba(7, 7, 13, 0.8)',
+                background: 'var(--bg-surface-elevated)',
                 backdropFilter: 'blur(20px)',
                 borderBottom: '1px solid var(--glass-border)',
                 zIndex: 900,
