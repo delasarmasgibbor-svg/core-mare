@@ -3,6 +3,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import ShiftSwapManager from "@/components/ShiftSwapManager";
+
+export const dynamic = 'force-dynamic';
 import CulinaryTrivia from "@/components/CulinaryTrivia";
 import ChefInspiration from "@/components/ChefInspiration";
 import { Calendar, Hotel, Users, CalendarCheck } from "lucide-react";

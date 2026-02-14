@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import HotelManagement from "@/components/HotelManagement";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HotelPage() {
     const occupancy = await prisma.hotelOccupancy.findUnique({
         where: { id: "live-occupancy" }

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import LeaveManager from "@/components/LeaveManager";
 import prisma from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export default async function MyLeavePage() {
     const session = await getServerSession(authOptions);
 

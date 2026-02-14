@@ -3,6 +3,8 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { createAnnouncement } from "../actions/announcements";
+
+export const dynamic = 'force-dynamic';
 import ProfileSettings from "@/components/ProfileSettings";
 import ChefInspiration from "@/components/ChefInspiration";
 import CulinaryTrivia from "@/components/CulinaryTrivia";

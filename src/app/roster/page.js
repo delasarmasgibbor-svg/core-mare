@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import RosterManager from "@/components/RosterManager";
 
+export const dynamic = 'force-dynamic';
+
 export default async function RosterPage() {
     // 1. Fetch all chefs with their availabilities
     const chefs = await prisma.user.findMany({
