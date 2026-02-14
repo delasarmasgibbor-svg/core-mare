@@ -166,7 +166,7 @@ export default function StaffList({ initialStaff }) {
                                             borderRadius: '20px',
                                             border: '1px solid var(--glass-border)',
                                             background: opt.value === '' ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)',
-                                            color: 'white',
+                                            color: 'var(--text-primary)',
                                             cursor: 'pointer',
                                             transition: 'all 0.2s ease'
                                         }}
@@ -253,7 +253,7 @@ export default function StaffList({ initialStaff }) {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         fontSize: '1.5rem',
-                                        color: 'white'
+                                        color: 'var(--text-primary)'
                                     }}>
                                         {!editingStaff.avatar && <User size={24} />}
                                     </div>
@@ -438,14 +438,14 @@ export default function StaffList({ initialStaff }) {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '1.8rem',
-                                    color: 'white',
+                                    color: 'var(--text-primary)',
                                     boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
                                     border: '1px solid rgba(255,255,255,0.1)'
                                 }}>
                                     {!chef.avatar && <User size={32} />}
                                 </div>
                                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                                    <h3 style={{ fontSize: '1.3rem', marginBottom: '0.25rem', color: 'white', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chef.name}</h3>
+                                    <h3 style={{ fontSize: '1.3rem', marginBottom: '0.25rem', color: 'var(--text-primary)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chef.name}</h3>
                                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                         <Mail size={12} /> {chef.email}
                                     </p>

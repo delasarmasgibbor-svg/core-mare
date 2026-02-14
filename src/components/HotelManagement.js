@@ -137,7 +137,7 @@ export default function HotelManagement({ initialOccupancy, initialReservations 
                                         borderBottom: '2px solid var(--glass-border)',
                                         padding: '0.5rem 0',
                                         borderRadius: 0,
-                                        color: 'white',
+                                        color: 'var(--text-primary)',
                                         width: '100%'
                                     }}
                                 />
@@ -168,7 +168,7 @@ export default function HotelManagement({ initialOccupancy, initialReservations 
                         <div style={{ background: 'rgba(255,255,255,0.01)', padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--glass-border)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.25rem', alignItems: 'center' }}>
                                 <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Occupancy Rate</span>
-                                <span style={{ fontWeight: '800', fontSize: '1.4rem', color: 'white' }}>{capacity > 0 ? Math.round((guests / capacity) * 100) : 0}%</span>
+                                <span style={{ fontWeight: '800', fontSize: '1.4rem', color: 'var(--text-primary)' }}>{capacity > 0 ? Math.round((guests / capacity) * 100) : 0}%</span>
                             </div>
                             <div style={{
                                 height: '8px',
@@ -355,11 +355,11 @@ export default function HotelManagement({ initialOccupancy, initialReservations 
                                     border: '1px solid var(--glass-border)'
                                 }}>
                                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: '800', textTransform: 'uppercase' }}>{new Date(res.date).toLocaleString('default', { month: 'short' })}</span>
-                                    <span style={{ fontSize: '1.25rem', color: 'white', fontWeight: '800', lineHeight: 1 }}>{new Date(res.date).getDate()}</span>
+                                    <span style={{ fontSize: '1.25rem', color: 'var(--text-primary)', fontWeight: '800', lineHeight: 1 }}>{new Date(res.date).getDate()}</span>
                                 </div>
                                 <div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
-                                        <p style={{ fontWeight: '700', fontSize: '1rem', color: 'white' }}>{res.eventName || "Standard Booking"}</p>
+                                        <p style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>{res.eventName || "Standard Booking"}</p>
                                         {res.type === "FUNCTION" && (
                                             <span style={{ fontSize: '0.65rem', background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '6px', fontWeight: '800', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                                 <PartyPopper size={10} /> FUNCTION
@@ -381,7 +381,7 @@ export default function HotelManagement({ initialOccupancy, initialReservations 
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
                                 <div style={{ textAlign: 'right' }}>
-                                    <p style={{ fontSize: '1.4rem', fontWeight: '800', color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>{res.guestCount}</p>
+                                    <p style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-0.02em' }}>{res.guestCount}</p>
                                     <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>GUESTS</p>
                                 </div>
                                 <button

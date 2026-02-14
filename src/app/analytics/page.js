@@ -33,7 +33,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.25rem' }}>{metric.label}</p>
-                            <p style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>{metric.value}</p>
+                            <p style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--text-primary)' }}>{metric.value}</p>
                         </div>
                     </div>
                 ))}
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
                 }}>
                     <BarChart3 size={40} color="var(--accent-light)" />
                 </div>
-                <h3 style={{ marginBottom: '0.75rem', color: 'white' }}>Analytics Dashboard Coming Soon</h3>
+                <h3 style={{ marginBottom: '0.75rem', color: 'var(--text-primary)' }}>Analytics Dashboard Coming Soon</h3>
                 <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto', lineHeight: 1.6 }}>
                     Advanced kitchen performance metrics, occupancy trends, and cost analysis will be available here.
                 </p>

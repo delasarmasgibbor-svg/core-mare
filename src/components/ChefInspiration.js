@@ -68,7 +68,7 @@ export default function ChefInspiration() {
                             fontSize: '0.85rem',
                             background: 'rgba(255,255,255,0.02)',
                             border: '1px solid var(--glass-border)',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             transition: 'all 0.2s'
                         }}
                         onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
@@ -87,7 +87,7 @@ export default function ChefInspiration() {
                             borderRadius: '10px',
                             background: 'var(--accent)',
                             border: 'none',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
@@ -133,13 +133,13 @@ export default function ChefInspiration() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        color: 'white'
+                                        color: 'var(--text-primary)'
                                     }}>
                                         {!idea.author?.avatar && <User size={18} />}
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                 {idea.author?.name || "Chef"}
                                             </span>
                                             <span style={{

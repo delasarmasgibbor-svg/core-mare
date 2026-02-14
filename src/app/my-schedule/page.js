@@ -119,7 +119,7 @@ export default async function MySchedulePage() {
                                         <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.1em' }}>
                                             {new Date(shift.date).toLocaleDateString('en-US', { weekday: 'short' })}
                                         </span>
-                                        <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'white' }}>
+                                        <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>
                                             {new Date(shift.date).getDate()}
                                         </span>
                                     </div>
@@ -148,7 +148,7 @@ export default async function MySchedulePage() {
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Hotel size={20} color="var(--accent-light)" /> Daily Briefing</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                             <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', textAlign: 'center', border: '1px solid var(--glass-border)' }}>
-                                <p style={{ fontSize: '1.8rem', fontWeight: '700', color: 'white', lineHeight: 1 }}>{totalGuests}</p>
+                                <p style={{ fontSize: '1.8rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1 }}>{totalGuests}</p>
                                 <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.1em', marginTop: '0.5rem' }}>GUESTS</p>
                             </div>
                             <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', textAlign: 'center', border: '1px solid var(--glass-border)' }}>

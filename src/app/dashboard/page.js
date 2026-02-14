@@ -75,10 +75,10 @@ export default async function DashboardPage() {
                         letterSpacing: '0.15em',
                         marginBottom: '0.75rem'
                     }}>Executive Overview</p>
-                    <h1 style={{ marginBottom: '0.5rem', color: 'white', fontSize: '3rem', letterSpacing: '-0.03em' }}>
+                    <h1 style={{ marginBottom: '0.5rem', color: 'var(--text-primary)', fontSize: '3rem', letterSpacing: '-0.03em' }}>
                         {greeting}, <span style={{ color: 'var(--text-secondary)', fontWeight: '400' }}>Chef</span> {user.name.split(' ')[0]}
                     </h1>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Here is the operational status for <span style={{ color: 'white' }}>{today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>.</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Here is the operational status for <span style={{ color: 'var(--accent)' }}>{today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>.</p>
                 </div>
                 <div style={{
                     display: 'flex',
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
                         <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }}></div>
                         <div style={{ position: 'absolute', inset: -2, borderRadius: '50%', border: '2px solid #10b981', opacity: 0.3, animation: 'pulse 2s infinite' }}></div>
                     </div>
-                    <span style={{ fontSize: '0.85rem', fontWeight: '800', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'white' }}>
+                    <span style={{ fontSize: '0.85rem', fontWeight: '800', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                         System Online <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem', fontWeight: '500' }}>• {user.role}</span>
                     </span>
                 </div>
@@ -116,7 +116,7 @@ export default async function DashboardPage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500', marginBottom: '0.5rem' }}>Expected Guest Census</p>
-                                <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>{totalGuests}</p>
+                                <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-0.02em' }}>{totalGuests}</p>
                             </div>
                             <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }}>
                                 <Users size={32} />
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500', marginBottom: '0.5rem' }}>Active Kitchen Crew</p>
-                                <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>{activeStaffCount}</p>
+                                <p style={{ fontWeight: '800', fontSize: '2.5rem', color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-0.02em' }}>{activeStaffCount}</p>
                             </div>
                             <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.02)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }}>
                                 <ChefHat size={32} />
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
                                 transition: 'var(--transition)'
                             }} className="announcement-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                                    <p style={{ fontWeight: '800', color: 'white', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>{note.title}</p>
+                                    <p style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>{note.title}</p>
                                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>{new Date(note.createdAt).toLocaleDateString()}</span>
                                 </div>
                                 <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>{note.body}</p>

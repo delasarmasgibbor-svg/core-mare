@@ -63,7 +63,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
         borderRadius: '16px',
         fontSize: '0.85rem',
         fontWeight: '600',
-        color: 'white',
+        color: 'var(--text-primary)',
         marginBottom: '0.75rem',
         display: 'flex',
         flexDirection: 'column',
@@ -109,7 +109,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '0.9rem',
-                        color: 'white'
+                        color: 'var(--text-primary)'
                     }}>
                         {!chef.avatar && <User size={16} />}
                     </div>
@@ -140,7 +140,7 @@ function DraggableChef({ chef, stats, onUpdateMaxHours }) {
                             background: 'rgba(0,0,0,0.4)',
                             border: '1.5px solid var(--accent)',
                             borderRadius: '6px',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             fontWeight: 'bold'
                         }}
                     />
@@ -221,7 +221,7 @@ function RosterCell({ id, shifts, onRemove, conflicts }) {
                             padding: '6px 10px',
                             borderRadius: '10px',
                             fontSize: '0.75rem',
-                            color: 'white',
+                            color: 'var(--text-primary)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
@@ -470,7 +470,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                                 max="10"
                                                 value={limit}
                                                 onChange={(e) => setShiftLimits({ ...shiftLimits, [type]: parseInt(e.target.value) || 0 })}
-                                                style={{ width: '50px', padding: '4px', textAlign: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', borderRadius: '4px', color: 'white' }}
+                                                style={{ width: '50px', padding: '4px', textAlign: 'center', background: 'rgba(0,0,0,0.05)', border: '1px solid var(--glass-border)', borderRadius: '4px', color: 'var(--text-primary)' }}
                                             />
                                         </div>
                                     ))}
@@ -528,7 +528,7 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                     >
                                         <ChevronLeft size={20} />
                                     </button>
-                                    <span style={{ fontWeight: '700', fontSize: '1rem', color: 'white' }}>{DAYS[mobileDay]}</span>
+                                    <span style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>{DAYS[mobileDay]}</span>
                                     <button
                                         onClick={() => setMobileDay(Math.min(6, mobileDay + 1))}
                                         disabled={mobileDay === 6}

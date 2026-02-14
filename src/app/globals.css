@@ -16,65 +16,69 @@
     --page-padding: 1.5rem 1rem;
   }
 
-  /* Colors - Ultra Premium Dark Palette */
-  --bg-dark: #030305;
-  /* Blackest void */
-  --bg-surface: #0a0a0f;
-  /* Deep obsidian */
-  --bg-surface-elevated: #13131a;
-  /* Elevated obsidian */
+  /* Colors - Carrington White & Gold Palette */
+  --bg-dark: #f8fafc;
+  /* Soft White/Grey Background */
+  --bg-surface: #ffffff;
+  /* Pure White Surface */
+  --bg-surface-elevated: #ffffff;
+  /* Elevated White */
 
-  /* Glassmorphism - Refined */
-  --glass: rgba(15, 15, 20, 0.6);
-  /* Darker, richer glass */
-  --glass-border: rgba(255, 255, 255, 0.06);
-  /* Subtle, crisp border */
-  --glass-highlight: rgba(255, 255, 255, 0.1);
-  /* Hover highlight */
-  --glass-shine: rgba(255, 255, 255, 0.03);
-  /* Subtle surface shine */
+  /* Glassmorphism - Light & Airy */
+  --glass: rgba(255, 255, 255, 0.7);
+  /* Frosted White */
+  --glass-border: rgba(212, 175, 55, 0.15);
+  /* Subtle Gold Border */
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  /* Bright White Highlight */
+  --glass-shine: rgba(255, 255, 255, 0.4);
+  /* Stronger Shine for Light Mode */
 
-  /* Text - Crisp & Readable */
-  --text-primary: #ffffff;
-  /* Pure white */
-  --text-secondary: #94a3b8;
-  /* Cool grey */
-  --text-muted: #64748b;
-  /* Muted slate */
-  --text-accent: #818cf8;
-  /* Light indigo accent text */
+  /* Text - Elegant Dark */
+  --text-primary: #1e293b;
+  /* Slate 800 - Deep Charcoal */
+  --text-secondary: #64748b;
+  /* Slate 500 - Muted Grey */
+  --text-muted: #94a3b8;
+  /* Slate 400 - Light Grey */
+  --text-accent: #d4af37;
+  /* Gold Text */
 
-  /* Brand - Electric Indigo & Gold */
-  --accent: #6366f1;
-  /* Electric Indigo */
-  --accent-dark: #4338ca;
-  /* Deep Indigo */
-  --accent-light: #818cf8;
-  /* Soft Indigo */
-  --accent-glow: rgba(99, 102, 241, 0.4);
-  /* Vibrant glow */
+  /* Brand - Classic Carrington Gold */
+  --accent: #d4af37;
+  /* Metallic Gold */
+  --accent-dark: #b4941f;
+  /* Deep Gold/Bronze */
+  --accent-light: #fcd34d;
+  /* Soft Gold */
+  --accent-glow: rgba(212, 175, 55, 0.25);
+  /* Warm Gold Glow */
 
-  --gold: #fbbf24;
-  /* Premium Gold */
-  --gold-glow: rgba(251, 191, 36, 0.3);
+  --gold: #d4af37;
+  /* Primary Gold */
+  --gold-glow: rgba(212, 175, 55, 0.2);
 
-  /* Semantic Colors - Professional & Muted */
+  /* Semantic Colors */
   --status-success: #10b981;
-  --status-warning: #f59e0b;
-  --status-error: #ef4444;
-  --status-info: #3b82f6;
-
-  /* Chef Role Colors */
-  --chef-exec: #ec4899;
-  /* Pink */
-  --chef-head: #8b5cf6;
-  /* Violet */
-  --chef-sous: #06b6d4;
-  /* Cyan */
-  --chef-cdp: #10b981;
   /* Emerald */
-  --chef-commis: #f59e0b;
+  --status-warning: #f59e0b;
   /* Amber */
+  --status-error: #ef4444;
+  /* Red */
+  --status-info: #3b82f6;
+  /* Blue */
+
+  /* Chef Role Colors - Keeping distinct but maybe muted? Keeping as is for now */
+  --chef-exec: #db2777;
+  /* Pink 600 */
+  --chef-head: #7c3aed;
+  /* Violet 600 */
+  --chef-sous: #0891b2;
+  /* Cyan 600 */
+  --chef-cdp: #059669;
+  /* Emerald 600 */
+  --chef-commis: #d97706;
+  /* Amber 600 */
 
   /* Spacing */
   --space-xs: 0.5rem;
@@ -83,10 +87,9 @@
   --space-lg: 2rem;
   --space-xl: 4rem;
 
-  /* Radius - Modern & Soft */
+  /* Radius */
   --radius-sm: 8px;
   --radius-md: 16px;
-  /* slightly larger for modern feel */
   --radius-lg: 24px;
   --radius-full: 9999px;
 
@@ -95,11 +98,13 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Shadows - Deep & Ambient */
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 12px 24px -6px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 32px 64px -12px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 50px rgba(99, 102, 241, 0.15);
+  /* Shadows - Soft & Warm */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
+  /* Lighter shadow for light mode */
+  --shadow-lg: 0 32px 64px -12px rgba(212, 175, 55, 0.15);
+  /* Golden shadow */
+  --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.15);
 }
 
 /* Base Reset & Typography */
@@ -112,10 +117,11 @@
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-dark);
+  /* Now a soft white */
   background-image:
-    radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(5, 5, 10, 1) 0%, transparent 60%);
+    radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 1) 0%, transparent 60%);
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;

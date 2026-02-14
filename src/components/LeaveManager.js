@@ -106,7 +106,7 @@ export default function LeaveManager({ user, initialRequests }) {
                         }}>
                             <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-                                    <span style={{ fontWeight: '700', color: 'white' }}>
+                                    <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>
                                         {new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()}
                                     </span>
                                     <span style={{

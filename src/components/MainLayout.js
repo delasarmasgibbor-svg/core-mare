@@ -85,7 +85,7 @@ export default function MainLayout({ children }) {
                 </div>
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px', borderRadius: '8px', transition: 'var(--transition-fast)' }}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px', borderRadius: '8px', transition: 'var(--transition-fast)' }}
                 >
                     {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                 </button>

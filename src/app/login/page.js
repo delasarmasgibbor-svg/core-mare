@@ -54,7 +54,7 @@ export default function LoginPage() {
                         <ChefHat size={32} color="white" />
                     </div>
                 </div>
-                <h1 style={{ marginBottom: '0.75rem', textAlign: 'center', fontSize: '2.25rem', color: 'white' }}>ChefOps.</h1>
+                <h1 style={{ marginBottom: '0.75rem', textAlign: 'center', fontSize: '2.25rem', color: 'var(--text-primary)' }}>ChefOps.</h1>
                 <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '2.5rem', fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.8rem', textTransform: 'uppercase' }}>
                     Professional Kitchen Management
                 </p>
@@ -124,7 +124,7 @@ export default function LoginPage() {
                             <p>chef1@hotel.com</p>
                         </div>
                     </div>
-                    <p style={{ fontSize: '0.7rem', marginTop: '0.75rem', color: 'var(--text-muted)' }}>Security Key: <span style={{ color: 'white' }}>password123</span></p>
+                    <p style={{ fontSize: '0.7rem', marginTop: '0.75rem', color: 'var(--text-muted)' }}>Security Key: <span style={{ color: 'var(--text-primary)' }}>password123</span></p>
                 </div>
             </div>
         </div>

@@ -52,14 +52,14 @@ export default function Sidebar({ isOpen }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
+                    color: 'var(--accent)',
                     boxShadow: '0 8px 20px var(--accent-glow)',
                     border: '1px solid rgba(255,255,255,0.1)'
                 }}>
                     <ChefHat size={28} />
                 </div>
                 <div>
-                    <h2 style={{ fontSize: '1.4rem', color: 'white', lineHeight: 1, fontFamily: "'Outfit', sans-serif", letterSpacing: '-0.02em' }}>Carrington</h2>
+                    <h2 style={{ fontSize: '1.4rem', color: 'var(--text-primary)', lineHeight: 1, fontFamily: "'Outfit', sans-serif", letterSpacing: '-0.02em' }}>Carrington</h2>
                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: '700', paddingLeft: '2px' }}>Chef Roster</span>
                 </div>
             </div>
@@ -134,7 +134,7 @@ export default function Sidebar({ isOpen }) {
                         <User size={18} />
                     </div>
                     <div style={{ overflow: 'hidden' }}>
-                        <p style={{ fontSize: '0.9rem', fontWeight: '700', color: 'white', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{session.user.name}</p>
+                        <p style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{session.user.name}</p>
                         <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{session.user.role}</p>
                     </div>
                 </div>
