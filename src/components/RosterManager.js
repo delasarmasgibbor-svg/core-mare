@@ -31,7 +31,8 @@ function DraggableChef({ chef, stats }) {
         data: chef
     });
 
-    const isOverLimit = stats?.hours > chef.maxWeeklyHours;
+    const isOverLimit = chef.employmentType === 'CASUAL' && stats?.hours > chef.maxWeeklyHours;
+    const isCasual = chef.employmentType === 'CASUAL';
 
     const availDots = ["MORNING", "LUNCH", "PM"].map(type => {
         const isAvail = chef.availabilities?.some(a => a.shiftType === type);
@@ -123,8 +124,9 @@ function DraggableChef({ chef, stats }) {
                     alignItems: 'center',
                     gap: '4px'
                 }}>
+                    {isCasual && <span style={{ fontSize: '0.55rem', background: 'rgba(251,191,36,0.3)', color: '#fbbf24', padding: '1px 4px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.03em' }}>C</span>}
                     <Clock size={10} />
-                    {stats?.hours || 0}h
+                    {stats?.hours || 0}h{isCasual && `/${chef.maxWeeklyHours || '?'}h`}
                 </span>
             </div>
 
@@ -264,7 +266,10 @@ export default function RosterManager({ initialChefs, initialRoster }) {
             });
         });
         chefs.forEach(chef => {
-            if (chef.maxWeeklyHours && chefStats[chef.id].hours > chef.maxWeeklyHours) chefStats[chef.id].overLimit = true;
+            // Only enforce hour limits for CASUAL employees
+            if (chef.employmentType === 'CASUAL' && chef.maxWeeklyHours && chefStats[chef.id].hours > chef.maxWeeklyHours) {
+                chefStats[chef.id].overLimit = true;
+            }
         });
         return { chefStats, conflicts };
     }, [roster, chefs]);
