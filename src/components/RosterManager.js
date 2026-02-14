@@ -293,8 +293,8 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                 }
                 chefStats[chef.id].days.add(day);
 
-                // Flag if staff is assigned to a non-preferred shift
-                if (chef.preferredShift && chef.preferredShift !== "") {
+                // Flag if staff is assigned to a non-preferred shift (CASUAL ONLY)
+                if (chef.employmentType === 'CASUAL' && chef.preferredShift && chef.preferredShift !== "") {
                     const preferredShifts = chef.preferredShift.split(',').map(s => s.trim()).filter(Boolean);
                     if (preferredShifts.length > 0 && !preferredShifts.includes(type)) {
                         conflicts[`${cellId}-${chef.id}`] = (conflicts[`${cellId}-${chef.id}`] || []);
