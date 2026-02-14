@@ -512,34 +512,32 @@ export default function RosterManager({ initialChefs, initialRoster }) {
                                 {/* Day Selector */}
                                 {/* Day Selector - Horizontal Tabs */}
                                 <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    overflowX: 'auto',
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(7, 1fr)',
+                                    gap: '4px',
                                     paddingBottom: '0.5rem',
-                                    marginBottom: '1rem',
-                                    scrollbarWidth: 'none',
-                                    msOverflowStyle: 'none'
+                                    marginBottom: '1rem'
                                 }}>
                                     {DAYS.map((d, i) => (
                                         <button
                                             key={d}
                                             onClick={() => setMobileDay(i)}
                                             style={{
-                                                flex: '0 0 auto',
-                                                padding: '0.75rem 1.5rem',
-                                                borderRadius: '999px',
-                                                border: i === mobileDay ? 'none' : '1px solid var(--glass-border)',
-                                                background: i === mobileDay ? 'var(--accent)' : 'var(--bg-surface-elevated)',
-                                                color: i === mobileDay ? 'white' : 'var(--text-primary)',
-                                                fontWeight: '700',
-                                                fontSize: '0.95rem',
+                                                padding: '0.5rem 0',
+                                                borderRadius: '8px',
+                                                border: i === mobileDay ? '1px solid var(--accent)' : '1px solid transparent',
+                                                background: i === mobileDay ? 'rgba(212, 175, 55, 0.15)' : 'rgba(255,255,255,0.05)',
+                                                color: i === mobileDay ? 'var(--accent-dark)' : 'var(--text-secondary)',
+                                                fontWeight: i === mobileDay ? '800' : '500',
+                                                fontSize: '0.7rem',
+                                                textAlign: 'center',
                                                 cursor: 'pointer',
-                                                boxShadow: i === mobileDay ? '0 4px 12px rgba(212, 175, 55, 0.4)' : 'none',
-                                                transition: 'all 0.2s',
-                                                whiteSpace: 'nowrap'
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                transition: 'all 0.2s'
                                             }}
                                         >
-                                            {d}
+                                            <span className="desktop-only">{d.slice(0, 3)}</span>
+                                            <span className="mobile-only">{d.slice(0, 3)}</span>
                                         </button>
                                     ))}
                                 </div>
